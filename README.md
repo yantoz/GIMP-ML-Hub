@@ -41,8 +41,7 @@ The plugins have been tested with GIMP 2.10 on the following machines: <br>
    * [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)
    * Copyright (C) 2017 NVIDIA Corporation. All rights reserved. 
    * Restricted to non-commercial research and educational purposes
-* http://arxiv.org/abs/1907.11922
-* C.-H. Lee, Z. Liu, L. Wu, and P. Luo, “MaskGAN: Towards Diverse and Interactive Facial Image Manipulation,”
+* C.-H. Lee, Z. Liu, L. Wu, and P. Luo, “[MaskGAN: Towards Diverse and Interactive Facial Image Manipulation](http://arxiv.org/abs/1907.11922),”
 in *IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, 2019.
 
 ### Face Parsing
@@ -52,26 +51,29 @@ in *IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, 2019.
 * Based on BiSeNet:
    * https://github.com/CoinCheung/BiSeNet
    * License: [MIT](https://github.com/CoinCheung/BiSeNet/blob/master/LICENSE)
-   * http://arxiv.org/abs/1808.00897
-   * C. Yu, J. Wang, C. Peng, C. Gao, G. Yu, and N. Sang, “BiSeNet: Bilateral segmentation network for
-     real-time semantic segmentation,” in Lecture Notes in *Computer Science (including subseries Lecture Notes in 
+   * C. Yu, J. Wang, C. Peng, C. Gao, G. Yu, and N. Sang, “[BiSeNet: Bilateral segmentation network for
+     real-time semantic segmentation](http://arxiv.org/abs/1808.00897),” in Lecture Notes in *Computer Science (including subseries Lecture Notes in 
      Artificial Intelligence and Lecture Notes in Bioinformatics)*, 2018, vol. 11217 LNCS, pp. 334–349.
 
 ### SRResNet
 * Source: https://github.com/twtygqyy/pytorch-SRResNet
 * Torch Hub fork: https://github.com/valgur/pytorch-SRResNet
 * License: [MIT](https://github.com/twtygqyy/pytorch-SRResNet/blob/master/LICENSE)
-* http://arxiv.org/abs/1609.04802
-* C. Ledig et al., “Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network,”
+* C. Ledig et al., “[Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network](http://arxiv.org/abs/1609.04802),”
   in *2017 IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, 2017, pp. 105–114.
 
 ### DeblurGANv2
 * Source: https://github.com/TAMU-VITA/DeblurGANv2
 * Torch Hub fork: https://github.com/valgur/DeblurGANv2
 * License: [BSD 3-clause](https://github.com/TAMU-VITA/DeblurGANv2/blob/master/LICENSE)
-* https://arxiv.org/abs/1908.03826
-* O. Kupyn, T. Martyniuk, J. Wu, and Z. Wang, “DeblurGAN-v2: Deblurring (Orders-of-Magnitude) Faster and Better,”
+* O. Kupyn, T. Martyniuk, J. Wu, and Z. Wang, “[DeblurGAN-v2: Deblurring (Orders-of-Magnitude) Faster and Better](https://arxiv.org/abs/1908.03826),”
   in *2019 IEEE/CVF International Conference on Computer Vision (ICCV)*, 2019, pp. 8877–8886.
+
+### MiDaS
+* Source: https://github.com/intel-isl/MiDaS
+* License: [MIT](https://github.com/intel-isl/MiDaS/blob/master/LICENSE), (c) 2019 Intel ISL (Intel Intelligent Systems Lab)
+* R. Ranftl, K. Lasinger, D. Hafner, K. Schindler, and V. Koltun,
+  “[Towards Robust Monocular Depth Estimation: Mixing Datasets for Zero-shot Cross-dataset Transfer](http://arxiv.org/abs/1907.01341),” 2019.
 
 ### Monodepth2
 * Source: https://github.com/nianticlabs/monodepth2
@@ -80,8 +82,7 @@ in *IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, 2019.
    * See the [license file](https://github.com/nianticlabs/monodepth2/blob/master/LICENSE) for terms
    * Copyright © Niantic, Inc. 2019. Patent Pending. All rights reserved.
    * Non-commercial use only
-* http://arxiv.org/abs/1806.01260
-* C. Godard, O. Mac Aodha, M. Firman, and G. Brostow, “Digging Into Self-Supervised Monocular Depth Estimation,”
+* C. Godard, O. Mac Aodha, M. Firman, and G. Brostow, “[Digging Into Self-Supervised Monocular Depth Estimation](http://arxiv.org/abs/1806.01260),”
   in *2019 IEEE/CVF International Conference on Computer Vision (ICCV)*, 2019, pp. 3827–3837.
 
 ### Neural Colorization
@@ -96,8 +97,7 @@ in *IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, 2019.
    * License:
       * Free for personal or research use
       * For commercial use please contact the authors
-   * https://cs.stanford.edu/people/jcjohns/papers/eccv16/JohnsonECCV16.pdf
-   * J. Johnson, A. Alahi, and L. Fei-Fei, “Perceptual Losses for Real-Time Style Transfer and Super-Resolution,”
+   * J. Johnson, A. Alahi, and L. Fei-Fei, “[Perceptual Losses for Real-Time Style Transfer and Super-Resolution](https://cs.stanford.edu/people/jcjohns/papers/eccv16/JohnsonECCV16.pdf),”
      in *Lecture Notes in Computer Science (including subseries Lecture Notes in Artificial Intelligence and Lecture Notes in Bioinformatics)*,
      vol. 9906 LNCS, 2016, pp. 694–711.
 
