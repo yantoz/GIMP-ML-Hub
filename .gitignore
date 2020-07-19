@@ -156,3 +156,4 @@ dmypy.json
 ## Project-specific ignores
 gimpenv/
 _config.py
+/test/out.png
