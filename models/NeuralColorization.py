@@ -6,15 +6,20 @@ from PIL import Image
 
 from _model_base import ModelBase, handle_alpha
 
+yuv_from_rgb_mat = np.array([
+    [0.299, 0.587, 0.114],
+    [-0.14714119, -0.28886916, 0.43601035],
+    [0.61497538, -0.51496512, -0.10001026]
+])
+
 
 def yuv2rgb(yuv):
-    yuv_from_rgb = np.array([
-        [0.299, 0.587, 0.114],
-        [-0.14714119, -0.28886916, 0.43601035],
-        [0.61497538, -0.51496512, -0.10001026]
-    ])
-    rgb_from_yuv = np.linalg.inv(yuv_from_rgb)
+    rgb_from_yuv = np.linalg.inv(yuv_from_rgb_mat)
     return np.dot(yuv, rgb_from_yuv.T.copy())
+
+
+def to_grayscale(rgb):
+    return np.dot(rgb, yuv_from_rgb_mat[0, None].T)
 
 
 class NeuralColorization(ModelBase):
@@ -32,7 +37,9 @@ class NeuralColorization(ModelBase):
     @torch.no_grad()
     def predict(self, img):
         h, w, d = img.shape
-        assert d == 1, "Input image must be grayscale"
+        if d == 3:
+            img = to_grayscale(img)
+
         G = self.model
 
         input_image = img[..., 0]

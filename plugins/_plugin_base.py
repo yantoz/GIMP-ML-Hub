@@ -68,8 +68,10 @@ class GimpPluginBase(object):
         self.gimp_img = gimp_img
         self.drawable = drawable
         print("Running {}...".format(self.name))
+        pdb.gimp_image_undo_group_start(self.gimp_img)
         gimp.progress_init("Running {}...".format(self.name))
         self.run(*extra_args)
+        pdb.gimp_image_undo_group_end(self.gimp_img)
 
     def predict(self, *args, **kwargs):
         assert self.model_file is not None
