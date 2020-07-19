@@ -1,0 +1,30 @@
+language: python
+cache:
+  - pip
+  - directories:
+      - $HOME/AppData/Local/Temp/chocolatey
+      - $HOME/.cache/torch
+      - /c/miniconda/pkgs
+matrix:
+    include:
+      - name: "Windows"
+        os: windows
+        language: shell
+branches:
+  only:
+  - master
+install:
+- |-
+    case $TRAVIS_OS_NAME in
+      windows)
+        set +x
+        choco install -y gimp
+        wget https://raw.githubusercontent.com/trichter/conda4travis/latest/conda4travis.sh -O conda4travis.sh
+        source conda4travis.sh
+        conda init powershell
+        powershell -Command 'Set-ExecutionPolicy -ExecutionPolicy RemoteSigned'
+        powershell ./install.ps1 -cpuonly
+        ;;
+    esac
+script:
+- cd test && ./test.sh
