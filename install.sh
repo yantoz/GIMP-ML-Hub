@@ -17,25 +17,44 @@ fi
 
 echo -e "\n-----------Installing GIMP-ML-----------\n"
 
-if [ "$(uname)" == "Linux" ]; then
-  if [[ $(lsb_release -rs) == "18.04" ]]; then #for ubuntu 18.04
-    sudo apt-get install python3-minimal
-  elif [[ $(lsb_release -rs) == "20.04" ]]; then #for ubuntu 20.04
-    sudo apt-get install python3-minimal
-    wget https://bootstrap.pypa.io/get-pip.py
-    python3 get-pip.py
-  elif [[ $(lsb_release -rs) == "10" ]]; then #for debian 10
-    sudo apt-get install gimp-python
-    wget https://bootstrap.pypa.io/get-pip.py
-    python3 get-pip.py
-  fi
-elif [ "$(uname)" != "Darwin" ]; then
-  echo "Warning: unsupported system '$(uname)'"
-fi
+case "$(uname -s)" in
+  Linux)
+    if [[ $(lsb_release -is) == "Ubuntu" ]]; then
+      if ! command -v pip3 &> /dev/null; then
+        echo "pip3 missing, installing..."
+        sudo apt-get install -y python3-pip
+      fi
+    elif [[ $(lsb_release -is) == "Debian" ]]; then
+      if ! dpkg -s gimp-python &> /dev/null; then
+        echo "gimp-python missing, installing..."
+        sudo apt-get install -y gimp-python
+      fi
+      if ! command -v pip3 &> /dev/null; then
+        echo "pip3 missing, installing..."
+        sudo apt-get install -y python3-pip
+      fi
+    else
+      echo "Warning: unknown Linux distribution '$(lsb_release -is)'"
+    fi
+    ;;
+  Darwin) # MacOS
+    ;;
+  CYGWIN*|MINGW32*|MSYS*|MINGW*)
+    echo 'Use install.ps1 for installation on Windows. Exiting.'
+    exit 1
+    ;;
+  *)
+    echo "Warning: unsupported operating system '$(uname)'"
+    ;;
+esac
 
 python3 -m pip install --user --upgrade virtualenv
 python3 -m virtualenv -p python3 gimpenv
 source gimpenv/bin/activate
+if ! command -v python | grep gimpenv -q; then
+  echo "Error: failed to activate gimpenv"
+  exit 1
+fi
 
 if [ $cpuonly ]; then
   get_cpu_version() {
