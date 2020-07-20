@@ -20,6 +20,10 @@ echo -e "\n-----------Installing GIMP-ML-----------\n"
 case "$(uname -s)" in
   Linux)
     if [[ $(lsb_release -is) == "Ubuntu" ]]; then
+      if ! command -v python2 &> /dev/null; then
+        echo "python2 missing, installing..."
+        sudo apt-get install -y python2-minimal libpython2.7
+      fi
       if ! command -v pip3 &> /dev/null; then
         echo "pip3 missing, installing..."
         sudo apt-get install -y python3-pip
