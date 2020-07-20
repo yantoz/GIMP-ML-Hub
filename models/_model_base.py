@@ -65,6 +65,7 @@ class ModelBase(ABC):
         return [self._encode(x) for x in result]
 
     def process_rpc(self, rpc_url):
+        print("Using", str(self.device).upper())
         self._rpc = ServerProxy(rpc_url, allow_none=True)
         try:
             args, kwargs = self._decode_rpc_args(*self._rpc.get_args())

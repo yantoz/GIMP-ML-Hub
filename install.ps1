@@ -1,9 +1,18 @@
+param([switch]$cpuonly = $false)
+
 echo "-----------Installing GIMP-ML-----------"
 
 conda install -y -c conda-forge mamba
-mamba create -y -n gimpenv python=3
+mamba create -y -n gimpenv 'python=3'
 conda activate gimpenv
-mamba install -y pytorch torchvision cudatoolkit numpy matplotlib-base -c pytorch
+if (!((Get-Command python).Path | Select-String -Pattern gimpenv -Quiet)) {
+    throw "Failed to activate the created conda environment. Run 'conda init powershell', re-open the powershell window and try again."
+}
+if ($cpuonly) {
+    mamba install -y pytorch torchvision cpuonly numpy matplotlib-base -c pytorch
+} else {
+    mamba install -y pytorch torchvision cudatoolkit numpy matplotlib-base -c pytorch
+}
 pip install -r requirements.txt
 python -c "import sys; print(f'python3_executable = r\'{sys.executable}\'')" | out-file -encoding utf8 plugins/_config.py
 conda deactivate
@@ -20,13 +29,13 @@ if (!($version)) {
 }
 $gimprcPath = ($env:APPDATA + '\GIMP\' + $version + '\gimprc')
 $escapedDir = [regex]::escape($pluginsDir)
-if (!(Test-Path $gimprcPath) -or !(Select-String -Path $gimprcPath -Pattern 'plug-in-path' -Quiet)) {
+if (!(Test-Path $gimprcPath)) {
+    New-Item $gimprcPath -Force
+}
+if (!(Select-String -Path $gimprcPath -Pattern 'plug-in-path' -Quiet)) {
     (cat $gimprcPath) + ('(plug-in-path "${gimp_dir}\\plug-ins;${gimp_plug_in_dir}\\plug-ins;' + $escapedDir + '")') | Set-Content $gimprcPath
-} else {
-    if (!(Select-String -Path $gimprcPath -Pattern ([regex]::escape($escapedDir)) -Quiet))
-    {
-        (cat $gimprcPath) -replace '\(\s*plug-in-path\s+"', ('$0' + $escapedDir + ';') | Set-Content $gimprcPath
-    }
+} elseif (!(Select-String -Path $gimprcPath -Pattern ([regex]::escape($escapedDir)) -Quiet)) {
+    (cat $gimprcPath) -replace '\(\s*plug-in-path\s+"', ('$0' + $escapedDir + ';') | Set-Content $gimprcPath
 }
 
 echo "-----------Installed GIMP-ML------------"
