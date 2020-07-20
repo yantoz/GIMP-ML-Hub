@@ -1,6 +1,15 @@
 #!/bin/bash
 set -e
 
+cpuonly=0
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --cpuonly) cpuonly=1;;
+        *) echo "Unknown parameter passed: $1"; exit 1 ;;
+    esac
+    shift
+done
+
 if [ -d "gimpenv" ]; then
   echo "Environment already set up!"
   exit
@@ -27,6 +36,15 @@ fi
 python3 -m pip install --user --upgrade virtualenv
 python3 -m virtualenv -p python3 gimpenv
 source gimpenv/bin/activate
+
+if [ $cpuonly ]; then
+  get_cpu_version() {
+    python -m pip install "$1==" -f https://download.pytorch.org/whl/torch_stable.html 2>&1 \
+      | grep -iPo '(?<=from versions: )[^)]+' | tr ', ' "\n" | grep +cpu | sort -n | tail -1
+  }
+  python -m pip install torch=="$(get_cpu_version torch)" torchvision=="$(get_cpu_version torchvision)" -f https://download.pytorch.org/whl/torch_stable.html
+fi
+
 python -m pip install -r requirements.txt
 python -c "import sys; print(f'python3_executable = \'{sys.executable}\'')" > plugins/_config.py
 deactivate
