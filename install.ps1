@@ -2,16 +2,15 @@ param([switch]$cpuonly = $false)
 
 echo "-----------Installing GIMP-ML-----------"
 
-conda install -y -c conda-forge mamba
-mamba create -y -n gimpenv 'python=3'
+conda create -y -n gimpenv 'python=3'
 conda activate gimpenv
 if (!((Get-Command python).Path | Select-String -Pattern gimpenv -Quiet)) {
     throw "Failed to activate the created conda environment. Run 'conda init powershell', re-open the powershell window and try again."
 }
 if ($cpuonly) {
-    mamba install -y pytorch torchvision cpuonly numpy matplotlib-base -c pytorch
+    conda install -c pytorch -y cpuonly pytorch torchvision numpy matplotlib-base
 } else {
-    mamba install -y pytorch torchvision cudatoolkit numpy matplotlib-base -c pytorch
+    conda install -c pytorch -y cudatoolkit pytorch torchvision numpy matplotlib-base
 }
 pip install -r requirements.txt
 python -c "import sys; print(f'python3_executable = r\'{sys.executable}\'')" | out-file -encoding utf8 plugins/_config.py
