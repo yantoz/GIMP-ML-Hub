@@ -51,6 +51,16 @@ case "$(uname -s)" in
         sudo apt-get install -y python3-pip
       fi
       
+    elif [[ $(lsb_release -is) == "Arch" ]]; then
+      if ! command -v pip3 &> /dev/null; then
+        echo "pip3 missing, installing..."
+        pacman -S python-pip --noconfirm 
+      fi
+      if ! command -v python2 &> /dev/null; then
+        echo "python2 missing, installing..."
+        pacman -S python2 --noconfirm 
+      fi
+      
     else
       echo "Warning: unknown Linux distribution '$(lsb_release -is)'"
     fi
@@ -92,7 +102,14 @@ script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 plugins_dir=$script_dir/plugins
 echo Determining gimprc location...
 gimprc_path=$(gimp -idf -b '(gimp-quit 1)' --verbose 2>/dev/null | grep -Po $'(?<=Parsing \')'"$HOME"'/.+gimprc' | head -1)
-echo Registering plugins directory im $gimprc_path...
+if [ -z "$gimprc_path" ]; then
+  echo ---
+  gimp -idf -b '(gimp-quit 1)' --verbose
+  echo ---
+  echo Could not determine gimprc location. Exiting.
+  exit 1
+fi
+echo Registering plugins directory in $gimprc_path...
 if [ ! -f "$gimprc_path" ]; then
   touch "$gimprc_path"
 fi
