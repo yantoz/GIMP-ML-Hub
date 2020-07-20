@@ -7,26 +7,41 @@ cache:
       - /c/miniconda/pkgs
 matrix:
     include:
-      - name: "Windows"
+      - name: "Windows 10"
         os: windows
         language: shell
+        install:
+          - set -e
+          - choco install -y gimp
+          - wget https://raw.githubusercontent.com/trichter/conda4travis/latest/conda4travis.sh -O conda4travis.sh
+          - mv /c/miniconda /c/miniconda_cached || true
+          - source conda4travis.sh
+          - rm -r /c/miniconda/pkgs; mv /c/miniconda_cached/pkgs /c/miniconda/pkgs || true
+          - conda init powershell
+          - powershell -Command 'Set-ExecutionPolicy -ExecutionPolicy RemoteSigned'
+          - powershell ./install.ps1 -cpuonly
+      - name: "Ubuntu 18.04"
+        os: linux
+        dist: bionic
+        services:
+          - xvfb
+        install:
+          - sudo apt-get update
+          - sudo apt-get install -y gimp --no-install-recommends
+          - ./install.sh --cpuonly
+      - name: "Ubuntu 20.04"
+        os: linux
+        dist: focal
+        services:
+          - xvfb
+        install:
+          - sudo apt-get update
+          - sudo apt-get install -y gimp --no-install-recommends
+          - ./install.sh --cpuonly
 branches:
   only:
   - master
-install:
-- |-
-    case $TRAVIS_OS_NAME in
-      windows)
-        set -x -e
-        choco install -y gimp
-        wget https://raw.githubusercontent.com/trichter/conda4travis/latest/conda4travis.sh -O conda4travis.sh
-        mv /c/miniconda /c/miniconda_cached || true
-        source conda4travis.sh
-        rm -r /c/miniconda/pkgs; mv /c/miniconda_cached/pkgs /c/miniconda/pkgs || true
-        conda init powershell
-        powershell -Command 'Set-ExecutionPolicy -ExecutionPolicy RemoteSigned'
-        powershell ./install.ps1 -cpuonly
-        ;;
-    esac
 script:
-- cd test && ./test.sh
+- cd tests && ./test.sh
+notifications:
+  email: false

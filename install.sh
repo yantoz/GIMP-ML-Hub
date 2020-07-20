@@ -48,7 +48,8 @@ case "$(uname -s)" in
     ;;
 esac
 
-python3 -m pip install --user --upgrade virtualenv
+# --user fails in Travis CI
+python3 -m pip install --user -U virtualenv || python3 -m pip install -U virtualenv
 python3 -m virtualenv -p python3 gimpenv
 source gimpenv/bin/activate
 if ! command -v python | grep gimpenv -q; then
@@ -72,7 +73,7 @@ deactivate
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 plugins_dir=$script_dir/plugins
 echo Determining gimprc location...
-gimprc_path=$(gimp -idf -b '(gimp-quit 1)' --verbose 2>/dev/null | grep -Po $'(?<=Parsing \')'"$HOME"'/.+gimprc')
+gimprc_path=$(gimp -idf -b '(gimp-quit 1)' --verbose 2>/dev/null | grep -Po $'(?<=Parsing \')'"$HOME"'/.+gimprc' | head -1)
 echo Registering plugins directory im $gimprc_path...
 if [ ! -f "$gimprc_path" ]; then
   touch "$gimprc_path"
