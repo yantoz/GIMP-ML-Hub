@@ -68,4 +68,21 @@ python -m pip install -r requirements.txt
 python -c "import sys; print(f'python3_executable = \'{sys.executable}\'')" > plugins/_config.py
 deactivate
 
+# Register the plugins directory in GIMP settings
+script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+plugins_dir=$script_dir/plugins
+echo Determining gimprc location...
+gimprc_path=$(gimp -idf -b '(gimp-quit 1)' --verbose 2>/dev/null | grep -Po $'(?<=Parsing \')'"$HOME"'/.+gimprc')
+echo Registering plugins directory im $gimprc_path...
+if [ ! -f "$gimprc_path" ]; then
+  touch "$gimprc_path"
+fi
+if ! grep plug-in-path "$gimprc_path" -q; then
+  echo '(plug-in-path "${gimp_dir}/plug-ins:${gimp_plug_in_dir}/plug-ins:'"$plugins_dir"'")' > $gimprc_path
+elif ! grep -q "$plugins_dir" "$gimprc_path"; then
+  sed -i'' -E -e 's#\(\s*plug-in-path\s+"#\0'"$plugins_dir"':#' "$gimprc_path"
+else
+  echo Plugins directory already registered
+fi
+
 echo -e "\n-----------Installed GIMP-ML------------\n"
