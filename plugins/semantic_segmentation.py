@@ -1,8 +1,9 @@
+#!/usr/bin/env python2
 import sys
-import time
 from os.path import dirname, realpath
-import gimpfu as gfu
+
 sys.path.append(realpath(dirname(__file__)))
+import gimpfu as gfu
 from _plugin_base import GimpPluginBase
 
 
