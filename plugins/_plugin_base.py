@@ -79,8 +79,16 @@ class GimpPluginBase(object):
         try:
             return model_proxy(*args, **kwargs)
         except:
-            gimp.message(traceback.format_exc())
+            error_info = self._format_error(traceback.format_exc())
+            gimp.message(error_info)
             raise
+
+    def _format_error(self, formatted_exception):
+        exception_msg = formatted_exception.rstrip().splitlines()[-1]
+        if "CUDA out of memory" in exception_msg:
+            return ("Not enough GPU memory available to run the model with given input image size. "
+                    "Try reducing the input layer's dimensions.\n\n" + exception_msg)
+        return formatted_exception
 
 
 class ModelProxy(object):
@@ -192,7 +200,7 @@ class ModelProxy(object):
                 type, value, traceback = self.server.exception
                 raise type, value, traceback
             raise RuntimeError("Model did not return a result!")
-        
+
         if len(self.result) == 1:
             return self.result[0]
         return self.result
