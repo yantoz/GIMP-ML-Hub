@@ -19,15 +19,28 @@ echo -e "\n-----------Installing GIMP-ML-----------\n"
 
 case "$(uname -s)" in
   Linux)
+    if ! command -v gimp; then
+      echo "Please install GIMP first. Exiting"
+      exit 1
+    fi
+    
     if [[ $(lsb_release -is) == "Ubuntu" ]]; then
-      if ! command -v python2 &> /dev/null; then
-        echo "python2 missing, installing..."
-        sudo apt-get install -y python2-minimal libpython2.7
-      fi
       if ! command -v pip3 &> /dev/null; then
         echo "pip3 missing, installing..."
         sudo apt-get install -y python3-pip
       fi
+      if ! command -v python2 &> /dev/null; then
+        echo "python2 missing, installing..."
+        sudo apt-get install -y python2-minimal libpython2.7
+      fi
+      if [ ! -d "/usr/lib/gimp/2.0/python" ]; then
+        echo "gimp-python was not included with GIMP, installing..."
+        # Ubuntu 20.04 no longer provides python-gtk2 and gimp-python from apt
+        wget 'http://de.archive.ubuntu.com/ubuntu/pool/universe/g/gimp/gimp-python_2.10.8-2_amd64.deb' -O /tmp/gimp-python.deb
+        wget 'http://de.archive.ubuntu.com/ubuntu/pool/universe/p/pygtk/python-gtk2_2.24.0-6_amd64.deb' -O /tmp/python-gtk2.deb
+        sudo apt-get install -y /tmp/gimp-python.deb /tmp/python-gtk2.deb
+      fi
+      
     elif [[ $(lsb_release -is) == "Debian" ]]; then
       if ! dpkg -s gimp-python &> /dev/null; then
         echo "gimp-python missing, installing..."
@@ -37,6 +50,7 @@ case "$(uname -s)" in
         echo "pip3 missing, installing..."
         sudo apt-get install -y python3-pip
       fi
+      
     else
       echo "Warning: unknown Linux distribution '$(lsb_release -is)'"
     fi
