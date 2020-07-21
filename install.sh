@@ -36,6 +36,7 @@ case "$(uname -s)" in
       if [ ! -d "/usr/lib/gimp/2.0/python" ]; then
         echo "gimp-python was not included with GIMP, installing..."
         # Ubuntu 20.04 no longer provides python-gtk2 and gimp-python from apt
+        # Using versions from eoan as a workaround
         wget 'http://de.archive.ubuntu.com/ubuntu/pool/universe/g/gimp/gimp-python_2.10.8-2_amd64.deb' -O /tmp/gimp-python.deb
         wget 'http://de.archive.ubuntu.com/ubuntu/pool/universe/p/pygtk/python-gtk2_2.24.0-6_amd64.deb' -O /tmp/python-gtk2.deb
         sudo apt-get install -y /tmp/gimp-python.deb /tmp/python-gtk2.deb
@@ -54,13 +55,19 @@ case "$(uname -s)" in
     elif [[ $(lsb_release -is) == "Arch" ]]; then
       if ! command -v pip3 &> /dev/null; then
         echo "pip3 missing, installing..."
-        pacman -S python-pip --noconfirm 
+        sudo pacman -S python-pip --noconfirm 
       fi
       if ! command -v python2 &> /dev/null; then
         echo "python2 missing, installing..."
-        pacman -S python2 --noconfirm 
+        sudo pacman -S python2 --noconfirm 
       fi
-      
+      if [ ! -d "/usr/lib/gimp/2.0/python" ]; then
+        echo "gimp-python was not included with GIMP, installing..."
+        # Arch no longer includes gimp2-python, need to use an AUR as a workaround
+        # TODO: maybe support other AUR utilities besides yay also
+        yay -S python2-gimp --noconfirm
+      fi
+
     else
       echo "Warning: unknown Linux distribution '$(lsb_release -is)'"
     fi

@@ -44,18 +44,19 @@ matrix:
         services:
           - docker
         before_install:
-          - docker run -d --name test-container -v $(pwd):/travis -w /travis archlinux:latest tail -f /dev/null
-          - docker exec -t test-container pacman -Syy xorg-server-xvfb --noconfirm
+          - docker run -d --name test-container -v $(pwd):/travis -w /travis whynothugo/makepkg:latest tail -f /dev/null
+          - docker exec -t test-container sudo pacman -Syy xorg-server-xvfb --noconfirm
           - exec-docker() { docker exec -t test-container xvfb-run bash -c "$*"; }
         install:
-          - exec-docker pacman -S gimp lsb-release --noconfirm
+          - exec-docker sudo pacman -S gimp lsb-release --noconfirm
+          - exec-docker sudo chown notroot:notroot . -R
           - exec-docker ./install.sh
         script:
-          - exec-docker timeout 30 tests/test.sh
+          - exec-docker timeout 60 tests/test.sh
 branches:
   only:
   - master
 script:
-- timeout 30 tests/test.sh
+- timeout 60 tests/test.sh
 notifications:
   email: false
