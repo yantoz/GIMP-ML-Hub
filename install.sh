@@ -17,9 +17,10 @@ fi
 
 echo -e "\n-----------Installing GIMP-ML-----------\n"
 
+# Make sure python3, pip3, python2 and gimp-python are installed
 case "$(uname -s)" in
   Linux)
-    if ! command -v gimp; then
+    if ! command -v gimp &> /dev/null; then
       echo "Please install GIMP first. Exiting"
       exit 1
     fi
@@ -45,7 +46,12 @@ case "$(uname -s)" in
     elif [[ $(lsb_release -is) == "Debian" ]]; then
       if ! dpkg -s gimp-python &> /dev/null; then
         echo "gimp-python missing, installing..."
-        sudo apt-get install -y gimp-python
+        if ! sudo apt-get install -y gimp-python; then
+          wget 'http://ftp.de.debian.org/debian/pool/main/g/gimp/gimp-python_2.10.8-2_amd64.deb' -O /tmp/gimp-python.deb
+          wget 'http://ftp.de.debian.org/debian/pool/main/p/pygtk/python-gtk2_2.24.0-5.1+b1_amd64.deb' -O /tmp/python-gtk2.deb
+          wget 'http://ftp.de.debian.org/debian/pool/main/p/pygobject-2/python-gobject-2_2.28.6-13+b1_amd64.deb' -O /tmp/python-gobject.deb
+          sudo apt install -y /tmp/gimp-python.deb /tmp/python-gtk2.deb /tmp/python-gobject.deb
+        fi
       fi
       if ! command -v pip3 &> /dev/null; then
         echo "pip3 missing, installing..."
@@ -83,6 +89,7 @@ case "$(uname -s)" in
     ;;
 esac
 
+# Create gimpenv with requirements.txt packages
 # --user fails in Travis CI
 python3 -m pip install --user -U virtualenv || python3 -m pip install -U virtualenv
 python3 -m virtualenv -p python3 gimpenv

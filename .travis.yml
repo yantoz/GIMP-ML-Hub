@@ -53,6 +53,34 @@ matrix:
           - exec-docker ./install.sh
         script:
           - exec-docker timeout 60 tests/test.sh
+      - name: "Debian stable"
+        os: linux
+        dist: focal
+        services:
+          - docker
+        before_install:
+          - docker run -d --name test-container -v $(pwd):/travis -w /travis debian:stable tail -f /dev/null
+          - docker exec -t test-container bash -c 'apt update && apt install -y sudo xvfb wget' 
+          - exec-docker() { docker exec -t test-container xvfb-run bash -c "$*"; }
+        install:
+          - exec-docker apt install -y gimp lsb-release --no-install-recommends
+          - exec-docker ./install.sh
+        script:
+          - exec-docker timeout 60 tests/test.sh
+      - name: "Debian sid"
+        os: linux
+        dist: focal
+        services:
+          - docker
+        before_install:
+          - docker run -d --name test-container -v $(pwd):/travis -w /travis debian:sid tail -f /dev/null
+          - docker exec -t test-container bash -c 'apt update && apt install -y sudo xvfb wget' 
+          - exec-docker() { docker exec -t test-container xvfb-run bash -c "$*"; }
+        install:
+          - exec-docker apt install -y gimp lsb-release --no-install-recommends
+          - exec-docker ./install.sh
+        script:
+          - exec-docker timeout 60 tests/test.sh
 branches:
   only:
   - master
