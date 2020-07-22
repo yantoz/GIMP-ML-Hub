@@ -3,22 +3,20 @@ set -e
 
 run_gimp() {
   case "$(uname -s)" in
-   Darwin)
-     gimp "$@"
-     ;;
-   Linux)
-     gimp "$@"
-     ;;
-   CYGWIN*|MINGW32*|MSYS*|MINGW*)
-     /c/Program\ Files/GIMP\ 2/bin/gimp-console-*.exe "$@"
-     ;;
-   *)
-     echo 'Other OS' 
-     ;;
-esac
+  Darwin)
+    # workaround for symlinks to GIMP binaries failing with GIMP 2.10 on macOS
+    "$(readlink "$(command -v gimp)" || command -v gimp)" "$@"
+    ;;
+  CYGWIN* | MINGW32* | MSYS* | MINGW*)
+    /c/Program\ Files/GIMP\ 2/bin/gimp-console-*.exe "$@"
+    ;;
+  *)
+    gimp "$@"
+    ;;
+  esac
 }
 
-script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 cd "$script_dir"
 
 # Test image:
@@ -27,8 +25,8 @@ cd "$script_dir"
 run_gimp -idf --verbose --batch-interpreter python-fu-eval -b 'execfile("test.py")'
 echo retval: $?
 if [ ! -f out.png ]; then
-    echo "Test failed"
-    exit 1
+  echo "Test failed"
+  exit 1
 else
-    echo "Test succeeded. out.png was created."
+  echo "Test succeeded. out.png was created."
 fi

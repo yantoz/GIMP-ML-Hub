@@ -1,4 +1,6 @@
 language: python
+os: linux
+dist: focal
 cache:
   - pip
   - directories:
@@ -6,85 +8,92 @@ cache:
       - $HOME/.cache/torch
       - /c/miniconda/pkgs
 matrix:
-    include:
-      - name: "Windows 10"
-        os: windows
-        language: shell
-        install:
-          - set -e
-          - choco install -y gimp
-          - wget https://raw.githubusercontent.com/trichter/conda4travis/latest/conda4travis.sh -O conda4travis.sh
-          - mv /c/miniconda /c/miniconda_cached || true
-          - source conda4travis.sh
-          - rm -r /c/miniconda/pkgs; mv /c/miniconda_cached/pkgs /c/miniconda/pkgs || true
-          - conda init powershell
-          - powershell -Command 'Set-ExecutionPolicy -ExecutionPolicy RemoteSigned'
-          - powershell ./install.ps1 -cpuonly
-      - name: "Ubuntu 18.04"
-        os: linux
-        dist: bionic
-        services:
-          - xvfb
-        install:
-          - sudo apt-get update
-          - sudo apt-get install -y gimp --no-install-recommends
-          - ./install.sh --cpuonly
-      - name: "Ubuntu 20.04 (apt)"
-        os: linux
-        dist: focal
-        services:
-          - xvfb
-        install:
-          - sudo apt-get update
-          - sudo apt-get install -y gimp --no-install-recommends
-          - ./install.sh --cpuonly
-      - name: "Arch Linux"
-        os: linux
-        dist: focal
-        services:
-          - docker
-        before_install:
-          - docker run -d --name test-container -v $(pwd):/travis -w /travis whynothugo/makepkg:latest tail -f /dev/null
-          - docker exec -t test-container sudo pacman -Syy xorg-server-xvfb --noconfirm
-          - exec-docker() { docker exec -t test-container xvfb-run bash -c "$*"; }
-        install:
-          - exec-docker sudo pacman -S gimp lsb-release --noconfirm
-          - exec-docker sudo chown notroot:notroot . -R
-          - exec-docker ./install.sh
-        script:
-          - exec-docker timeout 60 tests/test.sh
-      - name: "Debian stable"
-        os: linux
-        dist: focal
-        services:
-          - docker
-        before_install:
-          - docker run -d --name test-container -v $(pwd):/travis -w /travis debian:stable tail -f /dev/null
-          - docker exec -t test-container bash -c 'apt update && apt install -y sudo xvfb wget' 
-          - exec-docker() { docker exec -t test-container xvfb-run bash -c "$*"; }
-        install:
-          - exec-docker apt install -y gimp lsb-release --no-install-recommends
-          - exec-docker ./install.sh
-        script:
-          - exec-docker timeout 60 tests/test.sh
-      - name: "Debian sid"
-        os: linux
-        dist: focal
-        services:
-          - docker
-        before_install:
-          - docker run -d --name test-container -v $(pwd):/travis -w /travis debian:sid tail -f /dev/null
-          - docker exec -t test-container bash -c 'apt update && apt install -y sudo xvfb wget' 
-          - exec-docker() { docker exec -t test-container xvfb-run bash -c "$*"; }
-        install:
-          - exec-docker apt install -y gimp lsb-release --no-install-recommends
-          - exec-docker ./install.sh
-        script:
-          - exec-docker timeout 60 tests/test.sh
+  include:
+    - name: "Windows 10"
+      os: windows
+      language: shell
+      install:
+        - choco install -y gimp
+        - wget https://raw.githubusercontent.com/trichter/conda4travis/latest/conda4travis.sh -O conda4travis.sh
+        - mv /c/miniconda /c/miniconda_cached || true
+        - source conda4travis.sh
+        - rm -r /c/miniconda/pkgs; mv /c/miniconda_cached/pkgs /c/miniconda/pkgs || true
+        - conda init powershell
+        - powershell -Command 'Set-ExecutionPolicy -ExecutionPolicy RemoteSigned'
+        - powershell ./install.ps1 -cpuonly
+    - name: "Ubuntu 18.04"
+      dist: bionic
+      services:
+        - xvfb
+      install:
+        - sudo apt-get update
+        - sudo apt-get install -y gimp --no-install-recommends
+        - ./install.sh --cpuonly
+    - name: "Ubuntu 20.04 (apt)"
+      dist: focal
+      services:
+        - xvfb
+      install:
+        - sudo apt-get update
+        - sudo apt-get install -y gimp --no-install-recommends
+        - ./install.sh --cpuonly
+    - name: "Arch Linux"
+      services:
+        - docker
+      before_install:
+        - docker run -d --name test-container -v $(pwd):/travis -w /travis whynothugo/makepkg:latest tail -f /dev/null
+        - docker exec -t test-container sudo pacman -Syy xorg-server-xvfb --noconfirm
+        - exec-docker() { docker exec -t test-container xvfb-run bash -c "$*"; }
+      install:
+        - exec-docker sudo pacman -S gimp lsb-release --noconfirm
+        - exec-docker sudo chown notroot:notroot . -R
+        - exec-docker ./install.sh
+      script:
+        - exec-docker timeout 60 tests/test.sh
+    - name: "Debian stable"
+      services:
+        - docker
+      before_install:
+        - docker run -d --name test-container -v $(pwd):/travis -w /travis debian:stable tail -f /dev/null
+        - docker exec -t test-container bash -c 'apt update && apt install -y sudo xvfb wget'
+        - exec-docker() { docker exec -t test-container xvfb-run bash -c "$*"; }
+      install:
+        - exec-docker apt install -y gimp lsb-release --no-install-recommends
+        - exec-docker ./install.sh
+      script:
+        - exec-docker timeout 60 tests/test.sh
+    - name: "Debian sid"
+      services:
+        - docker
+      before_install:
+        - docker run -d --name test-container -v $(pwd):/travis -w /travis debian:sid tail -f /dev/null
+        - docker exec -t test-container bash -c 'apt update && apt install -y sudo xvfb wget'
+        - exec-docker() { docker exec -t test-container xvfb-run bash -c "$*"; }
+      install:
+        - exec-docker apt install -y gimp lsb-release --no-install-recommends
+        - exec-docker ./install.sh
+      script:
+        - exec-docker timeout 60 tests/test.sh
+    - name: "macOS Catalina (10.15.5)"
+      os: osx
+      osx_image: xcode12
+      language: shell
+      addons:
+        homebrew:
+          casks:
+            - gimp
+      install:
+        - ./install.sh
+script:
+  - timeout 60 tests/test.sh
+after_failure:
+  - env | sort
+  - ls -lah *
+  - command -v python2 && python2 --version
+  - command -v python3 && python3 --version
+  - command -v gimp && gimp --version
 branches:
   only:
-  - master
-script:
-- timeout 60 tests/test.sh
+    - master
 notifications:
   email: false

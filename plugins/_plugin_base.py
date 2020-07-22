@@ -153,6 +153,11 @@ class ModelProxy(object):
 
     def _start_subprocess(self, rpc_port):
         env = self._add_conda_env_to_path()
+        # make sure GIMP's Python 2 modules are not on PYTHONPATH
+        if 'PYTHONPATH' in env:
+            del env['PYTHONPATH']
+        if 'PYTHONHOME' in env:
+            del env['PYTHONHOME']
         try:
             self.proc = subprocess.Popen([
                 self.python_executable,
