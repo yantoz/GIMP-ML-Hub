@@ -47,10 +47,8 @@ Linux)
     if ! dpkg -s gimp-python &>/dev/null; then
       echo "gimp-python missing, installing..."
       if ! sudo apt-get install -y gimp-python; then
-        wget 'http://ftp.de.debian.org/debian/pool/main/g/gimp/gimp-python_2.10.8-2_amd64.deb' -O /tmp/gimp-python.deb
-        wget 'http://ftp.de.debian.org/debian/pool/main/p/pygtk/python-gtk2_2.24.0-5.1+b1_amd64.deb' -O /tmp/python-gtk2.deb
-        wget 'http://ftp.de.debian.org/debian/pool/main/p/pygobject-2/python-gobject-2_2.28.6-13+b1_amd64.deb' -O /tmp/python-gobject.deb
-        sudo apt install -y /tmp/gimp-python.deb /tmp/python-gtk2.deb /tmp/python-gobject.deb
+        echo "Error: gimp-python not available from apt. Exiting."
+        exit 1
       fi
     fi
     if ! command -v pip3 &>/dev/null; then
