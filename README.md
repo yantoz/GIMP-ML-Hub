@@ -19,7 +19,7 @@ Forked from the [original version](https://github.com/kritiksoman/GIMP-ML) to im
 * Results are always added to the same image instead of creating a new one. 
 * Improved error messages. Errors are now reported directly in the UI, not just in the command line.
 * Models are run with Python 3, saving the needed effort to back-port them to Python 2.
-* And many other minor improvements.
+* And many other smaller improvements.
 
 # Installation Steps
 1. Install [GIMP](https://www.gimp.org/downloads/). <br>
