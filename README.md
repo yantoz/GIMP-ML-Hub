@@ -99,9 +99,6 @@ in *IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, 2019.
      in *Lecture Notes in Computer Science (including subseries Lecture Notes in Artificial Intelligence and Lecture Notes in Bioinformatics)*,
      vol. 9906 LNCS, 2016, pp. 694–711.
 
-# Common Issues
-1. Colorize plugin not working: Switch to grayscale mode before running plugin. (Image->Mode->Grayscale)
-
 # Authors
 * Martin Valgur ([valgur](https://github.com/valgur)) – this version
 * Kritik Soman ([kritiksoman](https://github.com/kritiksoman)) – original GIMP-ML implementation
