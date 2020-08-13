@@ -1,15 +1,25 @@
-# GIMP-ML
-Set of Machine Learning Python plugins for GIMP. 
+# GIMP-ML-Hub
+[![TravisCI](https://travis-ci.com/valgur/GIMP-ML-Hub.svg?branch=master)](https://travis-ci.com/github/valgur/GIMP-ML-Hub)
 
-The plugins have been tested with GIMP 2.10 on the following machines: <br>
-[1] macOS Catalina 10.15.4 <br>
-[2] ubuntu 18.04 LTS <br>
-[3] ubuntu 20.04 LTS <br>
-[4] Debian GNU/Linux 10 (buster) <br>
-[5] Windows 10 <br>
+Machine Learning plugins for GIMP.
 
-# Screenshot of Menu
-![image1](screenshot.png)
+Forked from the [original version](https://github.com/kritiksoman/GIMP-ML) to improve the user experience in several aspects:
+* The PyTorch models are packaged in [PyTorch Hub](https://pytorch.org/hub/) format and are only downloaded as needed. This allows new models to be added more seamlessly, without needing to re-download gigabytes of model weights.
+* Fully automatic installation, that has been tested on all major operating systems and distros.
+* Correct handling of alpha channels.
+* Automatic covnersion between RGB/grayscale as needed by the models.
+* Results are always added to the same image instead of creating a new one. 
+* Improved error messages. Errors are now reported directly in the UI, not just in the command line.
+* Models are run with Python 3, saving the needed effort to back-port them to Python 2.
+* And many other minor improvements.
+
+The plugins [have been tested](https://travis-ci.com/github/valgur/GIMP-ML-Hub) with GIMP 2.10 on the following systems: <br>
+* macOS Catalina 10.15.5
+* ubuntu 18.04 LTS
+* ubuntu 20.04 LTS
+* Debian 10 (buster)
+* Arch Linux
+* Windows 10
 
 # Installation Steps
 1. Install [GIMP](https://www.gimp.org/downloads/). <br>
@@ -20,18 +30,6 @@ The plugins have been tested with GIMP 2.10 on the following machines: <br>
       * [Enable execution of Powershell scripts](https://superuser.com/a/106363/274408).
       * Run `install.ps1`.
 5. Open GIMP and go to Preferences -> Folders -> Plug-ins, add the folder `GIMP-ML/plugins` and restart GIMP. <br>
-
-# Demo videos on YouTube
-[<img src="http://img.youtube.com/vi/q9Ny5XqIUKk/0.jpg" width="400" height="300">](http://www.youtube.com/watch?v=q9Ny5XqIUKk)
-[<img src="http://img.youtube.com/vi/kXYsWvOB4uk/0.jpg" width="400" height="300">](http://www.youtube.com/watch?v=kXYsWvOB4uk)
-
-[<img src="http://img.youtube.com/vi/HVwISLRow_0/0.jpg" width="400" height="300">](http://www.youtube.com/watch?v=HVwISLRow_0)
-[<img src="http://img.youtube.com/vi/U1CieWi--gc/0.jpg" width="400" height="300">](http://www.youtube.com/watch?v=U1CieWi--gc) 
-
-[<img src="http://img.youtube.com/vi/HeBgWcXFQpI/0.jpg" width="400" height="300">](http://www.youtube.com/watch?v=HeBgWcXFQpI)
-[<img src="http://img.youtube.com/vi/adgHtu4chyU/0.jpg" width="400" height="300">](http://www.youtube.com/watch?v=adgHtu4chyU) 
-
-[<img src="http://img.youtube.com/vi/thS8VqPvuhE/0.jpg" width="400" height="300">](http://www.youtube.com/watch?v=thS8VqPvuhE) 
 
 # References
 ### MaskGAN
@@ -105,26 +103,11 @@ in *IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, 2019.
 1. Colorize plugin not working: Switch to grayscale mode before running plugin. (Image->Mode->Grayscale)
 
 # Authors
-* Kritik Soman ([kritiksoman](https://github.com/kritiksoman))
-* Martin Valgur ([valgur](https://github.com/valgur))
+* Martin Valgur ([valgur](https://github.com/valgur)) – this version
+* Kritik Soman ([kritiksoman](https://github.com/kritiksoman)) – original GIMP-ML implementation
 
 # License
 MIT
 
 Please note that additional license terms apply for each individual model. See the [references](#references) list for details.
 Many of the models restrict usage to non-commercial or research purposes only.
-
-
-# Citation
-If you use GIMP-ML, please cite the following [arXiv preprint](https://arxiv.org/abs/2004.13060):
-
-```
-@article{soman2020GIMPML,
-  title={GIMP-ML: Python Plugins for using Computer Vision Models in GIMP},
-  author={Soman, Kritik},
-  year={2020},
-  archivePrefix={arXiv},
-  arxivId={2004.13060},
-  eprint={2004.13060}
-}
-```
