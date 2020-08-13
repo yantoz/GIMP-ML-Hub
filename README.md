@@ -3,16 +3,6 @@
 
 Machine Learning plugins for GIMP.
 
-Forked from the [original version](https://github.com/kritiksoman/GIMP-ML) to improve the user experience in several aspects:
-* The PyTorch models are packaged in [PyTorch Hub](https://pytorch.org/hub/) format and are only downloaded as needed. This allows new models to be added more seamlessly, without needing to re-download gigabytes of model weights.
-* Fully automatic installation, that has been tested on all major operating systems and distros.
-* Correct handling of alpha channels.
-* Automatic covnersion between RGB/grayscale as needed by the models.
-* Results are always added to the same image instead of creating a new one. 
-* Improved error messages. Errors are now reported directly in the UI, not just in the command line.
-* Models are run with Python 3, saving the needed effort to back-port them to Python 2.
-* And many other minor improvements.
-
 The plugins [have been tested](https://travis-ci.com/github/valgur/GIMP-ML-Hub) with GIMP 2.10 on the following systems: <br>
 * macOS Catalina 10.15.5
 * ubuntu 18.04 LTS
@@ -20,6 +10,16 @@ The plugins [have been tested](https://travis-ci.com/github/valgur/GIMP-ML-Hub) 
 * Debian 10 (buster)
 * Arch Linux
 * Windows 10
+
+Forked from the [original version](https://github.com/kritiksoman/GIMP-ML) to improve the user experience in several aspects:
+* The PyTorch models are packaged in [PyTorch Hub](https://pytorch.org/hub/) format and are only downloaded as needed. This allows new models to be added more seamlessly, without needing to re-download gigabytes of model weights.
+* Fully automatic installation, that has been tested on all major operating systems and distros.
+* Correct handling of alpha channels.
+* Automatic conversion between RGB/grayscale as needed by the models.
+* Results are always added to the same image instead of creating a new one. 
+* Improved error messages. Errors are now reported directly in the UI, not just in the command line.
+* Models are run with Python 3, saving the needed effort to back-port them to Python 2.
+* And many other minor improvements.
 
 # Installation Steps
 1. Install [GIMP](https://www.gimp.org/downloads/). <br>
