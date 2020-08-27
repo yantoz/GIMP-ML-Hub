@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e
 
-cpuonly=0
+cpuonly=false
 while [[ "$#" -gt 0 ]]; do
   case $1 in
-    --cpuonly) cpuonly=1;;
+    --cpuonly) cpuonly=true;;
     *) echo "Unknown parameter passed: $1"; exit 1;;
   esac
   shift
@@ -106,7 +106,7 @@ if ! command -v python | grep gimpenv -q; then
   exit 1
 fi
 
-if [ $cpuonly ] && [ "$(uname -s)" != Darwin ]; then
+if [ $cpuonly = true ] && [ "$(uname -s)" != Darwin ]; then
   get_cpu_version() {
     python -m pip install "$1==" -f https://download.pytorch.org/whl/torch_stable.html 2>&1 \
       | grep -iEo 'from versions: [^)]+' | grep -Eo '[0-9].+' | tr ', ' "\n" | grep +cpu | sort -n | tail -1
