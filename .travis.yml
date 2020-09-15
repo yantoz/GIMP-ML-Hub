@@ -28,6 +28,7 @@ matrix:
       install:
         - sudo apt-get update
         - sudo apt-get install -y gimp --no-install-recommends
+        - mkdir -p $HOME/.config/pip && echo -e "[global]\nprogress_bar = off" > $HOME/.config/pip/pip.conf
         - ./install.sh --cpuonly
     - name: "Ubuntu 20.04 (apt)"
       dist: focal
@@ -36,6 +37,7 @@ matrix:
       install:
         - sudo apt-get update
         - sudo apt-get install -y gimp --no-install-recommends
+        - mkdir -p $HOME/.config/pip && echo -e "[global]\nprogress_bar = off" > $HOME/.config/pip/pip.conf
         - ./install.sh --cpuonly
     - name: "Arch Linux"
       services:
@@ -47,7 +49,8 @@ matrix:
       install:
         - exec-docker sudo pacman -S gimp lsb-release --noconfirm
         - exec-docker sudo chown notroot:notroot . -R
-        - exec-docker ./install.sh
+        - exec-docker 'mkdir -p $HOME/.config/pip && echo -e "[global]\nprogress_bar = off" > $HOME/.config/pip/pip.conf'
+        - exec-docker ./install.sh --cpuonly
       script:
         - exec-docker timeout 60 tests/test.sh
     - name: "Debian stable"
@@ -59,7 +62,8 @@ matrix:
         - exec-docker() { docker exec -t test-container xvfb-run bash -c "$*"; }
       install:
         - exec-docker apt install -y gimp lsb-release --no-install-recommends
-        - exec-docker ./install.sh
+        - exec-docker 'mkdir -p $HOME/.config/pip && echo -e "[global]\nprogress_bar = off" > $HOME/.config/pip/pip.conf'
+        - exec-docker ./install.sh --cpuonly
       script:
         - exec-docker timeout 60 tests/test.sh
     # - name: "Debian sid"
@@ -71,7 +75,8 @@ matrix:
     #     - exec-docker() { docker exec -t test-container xvfb-run bash -c "$*"; }
     #   install:
     #     - exec-docker apt install -y gimp lsb-release --no-install-recommends
-    #     - exec-docker ./install.sh
+    #     - exec-docker 'mkdir -p $HOME/.config/pip && echo -e "[global]\nprogress_bar = off" > $HOME/.config/pip/pip.conf'
+    #     - exec-docker ./install.sh --cpuonly
     #   script:
     #     - exec-docker timeout 60 tests/test.sh
     # - name: "macOS Catalina (10.15.5)"
@@ -83,7 +88,7 @@ matrix:
     #       casks:
     #         - gimp
     #   install:
-    #     - ./install.sh
+    #     - ./install.sh --cpuonly
 script:
   - timeout 60 tests/test.sh
 after_failure:
