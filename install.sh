@@ -112,7 +112,7 @@ if [ $cpuonly = true ] && [ "$(uname -s)" != Darwin ]; then
       | grep -iEo 'from versions: [^)]+' | grep -Eo '[0-9].+' | tr ', ' "\n" | grep +cpu | sort -n | tail -1
   }
   python -m pip install torch=="$(get_cpu_version torch)" torchvision=="$(get_cpu_version torchvision)" -f https://download.pytorch.org/whl/torch_stable.html
-elif [ ! $cpuonly ] && [ "$(uname -s)" == Darwin ]; then
+elif [ $cpuonly = false ] && [ "$(uname -s)" == Darwin ]; then
   echo "Warning: PyTorch binaries on macOS do not include CUDA support. Install from source if CUDA is needed."
 fi
 
