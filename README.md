@@ -23,7 +23,7 @@ The plugins [have been tested](https://travis-ci.com/github/valgur/GIMP-ML-Hub) 
 
 # Installation Steps
 1. Install [GIMP](https://www.gimp.org/downloads/). <br>
-2. Clone this repository: `git clone https://github.com/kritiksoman/GIMP-ML.git` <br>
+2. Clone this repository: `git clone https://github.com/valgur/GIMP-ML-Hub.git` <br>
 3. On Linux and MacOS run `./install.sh`.
 4. On Windows:
       * Install [Miniconda](https://docs.conda.io/en/latest/miniconda.html).
