@@ -7,29 +7,29 @@ Forked from the [original version](https://github.com/kritiksoman/GIMP-ML) to im
 * The PyTorch models are packaged in [PyTorch Hub](https://pytorch.org/hub/) format and are only downloaded as needed. This allows new models to be added more seamlessly, without needing to re-download gigabytes of model weights.
 * Models are run with Python 3, saving the needed effort to back-port them to Python 2.
 * Fully automatic installation, that has been tested on all major operating systems and distros.
+* Errors are now reported directly in the UI, rather than on the command line only.
 * Correct handling of alpha channels.
 * Automatic conversion between RGB/grayscale as needed by the models.
-* Results are always added to the same image instead of creating a new one. 
-* Errors are now reported directly in the UI, not just in the command line.
+* Results are always added to the same image instead of creating a new one.
 * And many other smaller improvements.
 
 The plugins [have been tested](https://travis-ci.com/github/valgur/GIMP-ML-Hub) with GIMP 2.10 on the following systems: <br>
 * macOS Catalina 10.15.5
-* ubuntu 18.04 LTS
-* ubuntu 20.04 LTS
+* Ubuntu 18.04 LTS
+* Ubuntu 20.04 LTS (apt-get only, snap is not yet supported)
 * Debian 10 (buster)
 * Arch Linux
 * Windows 10
 
 # Installation Steps
-1. Install [GIMP](https://www.gimp.org/downloads/). <br>
-2. Clone this repository: `git clone https://github.com/valgur/GIMP-ML-Hub.git` <br>
+1. Install [GIMP](https://www.gimp.org/downloads/).
+2. Clone this repository: `git clone https://github.com/valgur/GIMP-ML-Hub.git`
 3. On Linux and MacOS run `./install.sh`.
 4. On Windows:
       * Install [Miniconda](https://docs.conda.io/en/latest/miniconda.html).
       * [Enable execution of Powershell scripts](https://superuser.com/a/106363/274408).
       * Run `install.ps1`.
-5. Open GIMP and go to Preferences -> Folders -> Plug-ins, add the folder `GIMP-ML/plugins` and restart GIMP. <br>
+5. You should now find the GIMP-ML plugins under Layers → GIMP-ML. Feel free to create an issue if they are missing for some reason.
 
 # References
 ### MaskGAN
