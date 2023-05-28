@@ -3,7 +3,7 @@ from __future__ import print_function, absolute_import, division
 import os
 import subprocess
 import sys
-import tempfile
+import xmlrpclib
 import threading
 import traceback
 from SimpleXMLRPCServer import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
@@ -16,6 +16,10 @@ from _config import python3_executable
 
 base_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), '..'))
 models_dir = os.path.join(base_dir, 'models')
+
+import logging
+
+log = logging.getLogger("plugin_base")
 
 
 class GimpPluginBase(object):
@@ -165,6 +169,7 @@ class ModelProxy(object):
                 'http://127.0.0.1:{}/'.format(rpc_port)
             ], env=env)
             self.proc.wait()
+            log.debug("subprocess done: {}".format(self.proc.returncode))
         finally:
             self.server.shutdown()
             self.server.server_close()
@@ -219,17 +224,13 @@ class ImgArray(object):
         self.shape = shape
 
     def encode(self):
-        with tempfile.NamedTemporaryFile(mode='wb', delete=False) as f:
-            f.write(self.buffer)
-            temp_path = f.name
-        return "ImgArray", temp_path, self.shape
+        data = xmlrpclib.Binary(self.buffer)
+        return "ImgArray", data, self.shape
 
     @staticmethod
     def decode(x):
-        temp_path, shape = x[1:]
-        with open(temp_path, mode='rb') as f:
-            data = f.read()
-        os.unlink(temp_path)
+        data, shape = x[1:]
+        data = data.data
         return ImgArray(data, shape)
 
 

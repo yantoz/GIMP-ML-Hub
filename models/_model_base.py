@@ -1,12 +1,16 @@
 import os
-import tempfile
 import traceback
 from abc import ABC, abstractmethod
-from xmlrpc.client import ServerProxy
+from xmlrpc.client import ServerProxy, Binary
 
 import numpy as np
 import torch
 from PIL import Image
+
+import sys
+import logging
+
+log = logging.getLogger("model_base")
 
 
 class ModelBase(ABC):
@@ -38,20 +42,15 @@ class ModelBase(ABC):
     @staticmethod
     def _decode(x):
         if isinstance(x, list) and len(x) == 3 and x[0] == "ImgArray":
-            temp_path, shape = x[1:]
-            with open(temp_path, mode='rb') as f:
-                data = f.read()
-            os.unlink(temp_path)
+            data, shape = x[1:]
+            data = data.data
             x = np.frombuffer(data, dtype=np.uint8).reshape(shape)
         return x
 
     @staticmethod
     def _encode(x):
         if isinstance(x, np.ndarray):
-            with tempfile.NamedTemporaryFile(mode='wb', delete=False) as f:
-                f.write(x.astype(np.uint8).tobytes())
-                temp_path = f.name
-            x = ("ImgArray", temp_path, x.shape)
+            x = ("ImgArray", Binary(x.astype(np.uint8).tobytes()), x.shape)
         return x
 
     def _decode_rpc_args(self, args, kwargs):
@@ -65,15 +64,19 @@ class ModelBase(ABC):
         return [self._encode(x) for x in result]
 
     def process_rpc(self, rpc_url):
-        print("Using", str(self.device).upper())
+        log.debug("Processing using {}, communicating over {}".format(self.device, rpc_url))
         self._rpc = ServerProxy(rpc_url, allow_none=True)
         try:
             args, kwargs = self._decode_rpc_args(*self._rpc.get_args())
+            log.debug("Input: {}".format(args[0].shape))
             result = self.predict(*args, **kwargs)
-        except:
+            log.debug("Result: {}".format(result.shape))
+        except Exception as e:
+            log.debug(e)
             self._rpc.raise_exception(traceback.format_exc())
             return
-        self._rpc.return_result(self._encode_rpc_result(result))
+        result = self._encode_rpc_result(result)
+        self._rpc.return_result(result)
 
 
 class capture_tqdm:
