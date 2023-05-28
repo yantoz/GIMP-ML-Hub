@@ -6,3 +6,4 @@ matplotlib
 future
 pyyaml
 tqdm
+onnxruntime==1.14.1
