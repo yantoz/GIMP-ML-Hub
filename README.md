@@ -99,6 +99,20 @@ in *IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, 2019.
      in *Lecture Notes in Computer Science (including subseries Lecture Notes in Artificial Intelligence and Lecture Notes in Bioinformatics)*,
      vol. 9906 LNCS, 2016, pp. 694–711.
 
+
+### WaifuXL
+* Source: https://github.com/TheFutureGadgetsLab/WaifuXL
+* Torch Hub fork: https://github.com/yantoz/WaifuXL
+* License: [Apache 2.0](https://raw.githubusercontent.com/TheFutureGadgetsLab/WaifuXL/main/LICENSE)
+
+
+### Real-ESRGAN
+* Source: https://github.com/xinntao/Real-ESRGAN
+* Torch Hub fork: https://github.com/yantoz/Real-ESRGAN
+* License: [BSD-3-Clause](https://raw.githubusercontent.com/xinntao/Real-ESRGAN/master/LICENSE)
+* Xintao Wang and Liangbin Xie and Chao Dong and Ying Shan, “[Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data](https://arxiv.org/pdf/2107.10833),” in *International Conference on Computer Vision Workshops (ICCVW)International Conference on Computer Vision Workshops (ICCVW)*, 2021.
+
+
 # Authors
 * Martin Valgur ([valgur](https://github.com/valgur)) – this version
 * Kritik Soman ([kritiksoman](https://github.com/kritiksoman)) – original GIMP-ML implementation
