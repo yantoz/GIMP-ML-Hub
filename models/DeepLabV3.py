@@ -11,7 +11,7 @@ from _model_base import ModelBase, handle_alpha
 class DeepLabV3(ModelBase):
     def __init__(self):
         super().__init__()
-        self.hub_repo = "joemarshall/DeepLabV3Plus-Pytorch"
+        self.hub_repo = "yantoz/DeepLabV3Plus-Pytorch"
         self.model_name = None
 
     def load_model(self):
