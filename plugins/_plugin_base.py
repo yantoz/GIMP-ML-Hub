@@ -113,7 +113,7 @@ class ModelProxy(object):
 
     @staticmethod
     def _encode(x):
-        if isinstance(x, gimp.Layer):
+        if isinstance(x, gimp.Layer) or isinstance(x, gimp.Channel):
             x = layer_to_imgarray(x)
         if isinstance(x, ImgArray):
             x = x.encode()

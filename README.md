@@ -112,6 +112,12 @@ in *IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, 2019.
 * License: [BSD-3-Clause](https://raw.githubusercontent.com/xinntao/Real-ESRGAN/master/LICENSE)
 * Xintao Wang and Liangbin Xie and Chao Dong and Ying Shan, “[Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data](https://arxiv.org/pdf/2107.10833),” in *International Conference on Computer Vision Workshops (ICCVW)International Conference on Computer Vision Workshops (ICCVW)*, 2021.
 
+### LaMa Inpainting
+* Source: https://github.com/advimman/lama
+* Torch Hub fork: https://github.com/yantoz/lama
+* License: [Apache 2.0](https://raw.githubusercontent.com/advimman/lama/main/LICENSE)
+* Suvorov, Roman and Logacheva, Elizaveta and Mashikhin, Anton and Remizova, Anastasia and Ashukha, Arsenii and Silvestrov, Aleksei and Kong, Naejin and Goka, Harshith and Park, Kiwoong and Lempitsky, Victor, “[Resolution-robust Large Mask Inpainting with Fourier Convolutions](https://arxiv.org/pdf/2109.07161),” in *arXiv preprint arXiv:2109.07161*, 2021. 
+
 
 # Authors
 * Martin Valgur ([valgur](https://github.com/valgur)) – this version
