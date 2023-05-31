@@ -16,7 +16,13 @@ class LamaInpaint(ModelBase):
     def predict(self, input_image, mask=None):
 
         h, w, d = input_image.shape
-        assert d == 3, "Input image must be RGB"
+        assert d >= 3, "Input image must be RGB"
+
+        if d > 3:
+            alpha = input_image[:,:,3]
+            input_image = input_image[:,:,:3]
+        else:
+            alpha = None
 
         hm, wm, dm = mask.shape
         assert (hm == h) and (wm == w), "Mask must have same size with image"
@@ -24,7 +30,12 @@ class LamaInpaint(ModelBase):
         
         mask = np.squeeze(mask, axis=2)
 
-        return self.model(input_image, mask)
+        output = self.model(input_image, mask)
+
+        if not alpha is None:
+            output = np.concatenate((output, np.expand_dims(alpha, 2)), 2)
+
+        return output
 
 
 model = LamaInpaint()

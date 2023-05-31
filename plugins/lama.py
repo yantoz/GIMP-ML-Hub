@@ -35,7 +35,7 @@ plugin.register(
     author="yantoz",
     copyright="",
     date="2023",
-    label="Inpaint (Lama) ...",
+    label="Inpaint (LaMa) ...",
     imagetypes="RGB*"
 )
 main()
