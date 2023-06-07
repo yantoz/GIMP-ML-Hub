@@ -16,3 +16,5 @@ pytorch-lightning==1.2.9
 kornia==0.5.0
 webdataset
 omegaconf
+dlib==19.21.0
+opencv-python==4.5.3.56

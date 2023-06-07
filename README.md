@@ -99,12 +99,10 @@ in *IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, 2019.
      in *Lecture Notes in Computer Science (including subseries Lecture Notes in Artificial Intelligence and Lecture Notes in Bioinformatics)*,
      vol. 9906 LNCS, 2016, pp. 694–711.
 
-
 ### WaifuXL
 * Source: https://github.com/TheFutureGadgetsLab/WaifuXL
 * Torch Hub fork: https://github.com/yantoz/WaifuXL
 * License: [Apache 2.0](https://raw.githubusercontent.com/TheFutureGadgetsLab/WaifuXL/main/LICENSE)
-
 
 ### Real-ESRGAN
 * Source: https://github.com/xinntao/Real-ESRGAN
@@ -117,6 +115,14 @@ in *IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, 2019.
 * Torch Hub fork: https://github.com/yantoz/lama
 * License: [Apache 2.0](https://raw.githubusercontent.com/advimman/lama/main/LICENSE)
 * Suvorov, Roman and Logacheva, Elizaveta and Mashikhin, Anton and Remizova, Anastasia and Ashukha, Arsenii and Silvestrov, Aleksei and Kong, Naejin and Goka, Harshith and Park, Kiwoong and Lempitsky, Victor, “[Resolution-robust Large Mask Inpainting with Fourier Convolutions](https://arxiv.org/pdf/2109.07161),” in *arXiv preprint arXiv:2109.07161*, 2021. 
+
+### VToonify
+* Source: https://github.com/williamyang1991/VToonify
+* Torch Hub fork: https://github.com/yantoz/VToonify
+* License: 
+   * See the [license file](https://github.com/williamyang1991/VToonify/blob/main/LICENSE.md) for terms
+   * For commercial use please contact the authors
+* Yang, Shuai and Jiang, Liming and Liu, Ziwei and Loy, Chen Change, “[VToonify: Controllable High-Resolution Portrait Video Style Transfer](),” in *ACM Transactions on Graphics (TOG)*, vol. 41, 2022, pp. 1-15.
 
 
 # Authors
