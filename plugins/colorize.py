@@ -25,7 +25,7 @@ plugin.register(
     author="Kritik Soman",
     copyright="",
     date="2020",
-    label="colorize...",
+    label="Colorize (NeuralColorization) ...",
     imagetypes="RGB*, GRAY*"
 )
 main()

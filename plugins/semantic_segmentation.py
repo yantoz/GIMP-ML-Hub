@@ -37,7 +37,7 @@ plugin.register(
     author="Joe Marshall",
     copyright="",
     date="2020",
-    label="Semantic Segmentation...",
+    label="Semantic Segmentation (DeepLabV3) ...",
     imagetypes="RGB*",
     params=[(gfu.PF_OPTION, "Model", "Choose model:", 0, _model_params)],
 )

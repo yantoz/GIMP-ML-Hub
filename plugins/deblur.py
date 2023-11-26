@@ -22,7 +22,7 @@ plugin.register(
     author="Kritik Soman",
     copyright="",
     date="2020",
-    label="deblur...",
+    label="Deblur (DeblurGANv2) ...",
     imagetypes="RGB*"
 )
 main()

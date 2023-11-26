@@ -29,7 +29,7 @@ plugin.register(
     author="Martin Valgur",
     copyright="",
     date="2020",
-    label="Depth Estimation...",
+    label="Depth Estimation (MiDaS/Monodepth2) ...",
     imagetypes="RGB*",
     params=[
         (gfu.PF_OPTION, "Model", "Model", 0, [x[0] for x in DepthEstimation.model_options]),

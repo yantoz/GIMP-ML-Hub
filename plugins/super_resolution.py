@@ -20,11 +20,11 @@ plugin = SuperResolution()
 plugin.register(
     proc_name="super-resolution",
     blurb="super-resolution",
-    help="Running super-resolution.",
+    help="Running Super Resolution.",
     author="Kritik Soman",
     copyright="",
     date="2020",
-    label="super-resolution...",
+    label="Super Resolution (SRResNet) ...",
     imagetypes="RGB*"
 )
 main()

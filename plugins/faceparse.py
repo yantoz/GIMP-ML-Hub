@@ -22,7 +22,7 @@ plugin.register(
     author="Kritik Soman",
     copyright="",
     date="2020",
-    label="faceparse...",
+    label="Face Parse (BiSeNet) ...",
     imagetypes="RGB*"
 )
 main()
