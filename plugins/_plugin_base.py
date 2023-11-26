@@ -40,11 +40,11 @@ class GimpPluginBase(object):
 
     def create_layer(self, result, name=None):
         name = name or self.drawable.name + ' ' + self.name
-        imgarray_to_layer(result, self.gimp_img, name)
+        return imgarray_to_layer(result, self.gimp_img, name)
 
     def create_image(self, result, name=None):
         name = name or self.drawable.name + ' ' + self.name
-        imgarray_to_image(result, name)
+        return imgarray_to_image(result, name)
 
     def register(self, proc_name, blurb, help, author, copyright, date, label,
                  imagetypes, params=None, results=None, menu="<Image>/Layer/GIML-ML",
