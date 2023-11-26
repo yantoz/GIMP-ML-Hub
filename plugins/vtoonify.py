@@ -13,12 +13,14 @@ class VToonify(GimpPluginBase):
         self.model_file = "VToonify.py"
         self.name = _style_list[style_num][0]
         gfu.gimp.progress_init("Running VToonify ({}) ...".format(self.name))
-        result = self.predict(self.drawable, _style_list[style_num][1], style_id, style_degree, color_transfer, keep_size)
-        h, w, _ = result.shape
-        self.gimp_img.resize(w, h, 0, 0)
-        self.create_layer(
+        layer = self.drawable
+        result = self.predict(layer, _style_list[style_num][1], style_id, style_degree, color_transfer, keep_size)
+        #h, w, _ = result.shape
+        #self.gimp_img.resize(w, h, 0, 0)
+        newlayer = self.create_layer(
             result, name=self.drawable.name + ":" + _style_list[style_num][0]
         )
+	newlayer.set_offsets(layer.offsets[0], layer.offsets[1])
 
 
 _style_list = [
@@ -40,7 +42,7 @@ _style_params = (name for i, (name, style) in enumerate(_style_list))
 plugin = VToonify()
 plugin.register(
     proc_name="vtoonify",
-    blurb="VToonify",
+    blurb="VToonify\nSee: https://github.com/williamyang1991/DualStyleGAN/tree/main/doc_images",
     help="Controllable High-Resolution Portrait Video Style Transfer",
     author="yantoz",
     copyright="",
