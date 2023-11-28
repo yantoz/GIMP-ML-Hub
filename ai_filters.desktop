@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Krita/PythonPlugin
+X-KDE-Library=ai_filters
+X-Krita-Manual=Manual.html
+X-Python-2-Compatible=true
+Name=AI Filters
+Comment=Plugin for filtering layer with AI
