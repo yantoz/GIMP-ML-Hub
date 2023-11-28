@@ -108,7 +108,7 @@ in *IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, 2019.
 * Source: https://github.com/xinntao/Real-ESRGAN
 * Torch Hub fork: https://github.com/yantoz/Real-ESRGAN
 * License: [BSD-3-Clause](https://raw.githubusercontent.com/xinntao/Real-ESRGAN/master/LICENSE)
-* Xintao Wang and Liangbin Xie and Chao Dong and Ying Shan, “[Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data](https://arxiv.org/pdf/2107.10833),” in *International Conference on Computer Vision Workshops (ICCVW)International Conference on Computer Vision Workshops (ICCVW)*, 2021.
+* Xintao Wang and Liangbin Xie and Chao Dong and Ying Shan, “[Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data](https://arxiv.org/pdf/2107.10833),” in *International Conference on Computer Vision Workshops (ICCVW)*, 2021.
 
 ### LaMa Inpainting
 * Source: https://github.com/advimman/lama
@@ -116,13 +116,21 @@ in *IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, 2019.
 * License: [Apache 2.0](https://raw.githubusercontent.com/advimman/lama/main/LICENSE)
 * Suvorov, Roman and Logacheva, Elizaveta and Mashikhin, Anton and Remizova, Anastasia and Ashukha, Arsenii and Silvestrov, Aleksei and Kong, Naejin and Goka, Harshith and Park, Kiwoong and Lempitsky, Victor, “[Resolution-robust Large Mask Inpainting with Fourier Convolutions](https://arxiv.org/pdf/2109.07161),” in *arXiv preprint arXiv:2109.07161*, 2021. 
 
+### DualStyleGAN
+* Source: https://github.com/williamyang1991/DualStyleGAN
+* Torch Hub fork: https://github.com/yantoz/DualStyleGAN
+* License:
+   * See the [license file](https://github.com/williamyang1991/DualStyleGAN/blob/main/LICENSE.md) for terms
+   * For commercial use please contact the authors
+* Yang, Shuai and Jiang, Liming and Liu, Ziwei and Loy, Chen Change, “[Pastiche Master: Exemplar-Based High-Resolution Portrait Style Transfer](https://arxiv.org/abs/2203.13248),” in *CVPR*, 2022.
+
 ### VToonify
 * Source: https://github.com/williamyang1991/VToonify
 * Torch Hub fork: https://github.com/yantoz/VToonify
 * License: 
    * See the [license file](https://github.com/williamyang1991/VToonify/blob/main/LICENSE.md) for terms
    * For commercial use please contact the authors
-* Yang, Shuai and Jiang, Liming and Liu, Ziwei and Loy, Chen Change, “[VToonify: Controllable High-Resolution Portrait Video Style Transfer](),” in *ACM Transactions on Graphics (TOG)*, vol. 41, 2022, pp. 1-15.
+* Yang, Shuai and Jiang, Liming and Liu, Ziwei and Loy, Chen Change, “[VToonify: Controllable High-Resolution Portrait Video Style Transfer](https://arxiv.org/abs/2209.11224),” in *ACM Transactions on Graphics (TOG)*, vol. 41, 2022, pp. 1-15.
 
 
 # Authors
