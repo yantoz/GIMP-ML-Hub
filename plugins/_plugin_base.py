@@ -12,7 +12,7 @@ from abc import ABCMeta, abstractmethod
 import gimpfu as gfu
 from gimpfu import gimp, pdb
 
-from _config import python3_executable
+from _config import python3_executable, torch_home
 
 base_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), '..'))
 models_dir = os.path.join(base_dir, 'models')
@@ -162,6 +162,7 @@ class ModelProxy(object):
             del env['PYTHONPATH']
         if 'PYTHONHOME' in env:
             del env['PYTHONHOME']
+        env['TORCH_HOME'] = torch_home
         try:
             self.proc = subprocess.Popen([
                 self.python_executable,
