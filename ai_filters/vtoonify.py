@@ -28,6 +28,7 @@ class VToonify(FilterBase):
             [Type.FLOAT,  "style_degree",   "Style Degree",   0.5                   ],
             [Type.BOOL,   "color_transfer", "Color Transfer", False                 ],
             [Type.BOOL,   "keep_size",      "Keep Size",      True                  ],
+            [Type.BOOL,   "force_cpu",      "Force CPU",      False                 ],
         ]
 
         super().__init__(parent, title, name, info, params)
@@ -41,6 +42,7 @@ class VToonify(FilterBase):
         style_degree = params["style_degree"]
         color_transfer = params["color_transfer"]
         keep_size = params["keep_size"]
+        self._force_cpu = params["force_cpu"]
 
         self.model_file = "VToonify.py"
         name = self.style_list[style_num][0]

@@ -12,13 +12,14 @@ from PIL import Image
 import sys
 import logging
 
+#logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger("model_base")
 
 
 class ModelBase(ABC):
     def __init__(self):
         self.hub_repo = None
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = None
         self._rpc = None
         self._model = None
 
@@ -77,11 +78,26 @@ class ModelBase(ABC):
         threading.Thread(target=send_heartbeat, daemon=True).start()
 
     def process_rpc(self, rpc_url):
-        log.debug("Processing using {}, communicating over {}".format(self.device, rpc_url))
+        log.debug("Processing using communication over {}".format(rpc_url))
         self._rpc = ServerProxy(rpc_url, allow_none=True)
         try:
             args, kwargs = self._decode_rpc_args(*self._rpc.get_args())
             self.start_heartbeat()
+            if not kwargs.get("force_cpu", None) is None:
+                force_cpu = kwargs.get("force_cpu")
+                kwargs.pop("force_cpu")
+            else:
+                force_cpu = os.environ.get("TORCH_FORCE_CPU", 0)
+            if force_cpu:
+                self.device = torch.device("cpu")
+            else:
+                if torch.cuda.is_available():
+                    self.device = torch.device("cuda")
+                elif torch.backends.mps.is_available():
+                    self.device = torch.device("mps")
+                else:
+                    self.device = torch.device("cpu")
+            log.info("Device: {}".format(self.device))
             log.debug("Input: {}".format(args[0].shape))
             result = self.predict(*args, **kwargs)
             log.debug("Result: {}".format(result.shape))

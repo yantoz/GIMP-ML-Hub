@@ -100,6 +100,7 @@ class FilterBase(QWidget):
         self.info = info
         self._params = params
         self._bounds = None
+        self._force_cpu = False
         self._model_proxy = None
         self._message = self.__dummy
         self.initUI()
@@ -234,6 +235,7 @@ class FilterBase(QWidget):
     def predict(self, *args, **kwargs):
         assert self.model_file is not None
         self._model_proxy = ModelProxy(self, self.model_file)
+        kwargs["force_cpu"] = self._force_cpu
         try:
             result = self._model_proxy(*args, **kwargs)
             self._model_proxy = None
@@ -395,7 +397,7 @@ class ModelProxy(object):
                     raise RuntimeError(self.server.exception)
                 type, value, traceback = self.server.exception
                 #raise type, value, traceback
-            raise RuntimeError("Model did not return a result!")
+            self.model._message("Model did not return a result!")
 
         if self.result and len(self.result) == 1:
             return self.result[0]

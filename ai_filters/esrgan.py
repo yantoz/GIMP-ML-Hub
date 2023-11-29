@@ -20,6 +20,7 @@ class ESRGAN(FilterBase):
 
         params = [
             [Type.OPTION, "model",          "Model",          0,     self.model_list],
+            [Type.BOOL,   "force_cpu",      "Force CPU",      False                 ],
         ]
 
         super().__init__(parent, title, name, info, params)
@@ -29,6 +30,7 @@ class ESRGAN(FilterBase):
 
         params = self.params
         model_num = params["model"]
+        self._force_cpu = params["force_cpu"]
 
         self.model_file = "esrgan.py"
         name = self.model_list[model_num]

@@ -8,12 +8,18 @@ class Deblur(FilterBase):
         name = "Deblur"
         info = "https://github.com/VITA-Group/DeblurGANv2"
 
-        params = []
+        params = [
+            [Type.BOOL,   "force_cpu",      "Force CPU",      False                 ],
+        ]
 
         super().__init__(parent, title, name, info, params)
 
 
     def run(self, img, bounds):
+
+        params = self.params
+        self._force_cpu = params["force_cpu"]
+
         self.model_file = "DeblurGANv2.py"
         result = self.predict(img)
         if result:

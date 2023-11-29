@@ -30,6 +30,7 @@ class GimpPluginBase(object):
         self.gimp_img = None
         self.drawable = None
         self.name = None
+        self._force_cpu = False
 
     @abstractmethod
     def run(self, *args, **kwargs):
@@ -80,6 +81,7 @@ class GimpPluginBase(object):
     def predict(self, *args, **kwargs):
         assert self.model_file is not None
         model_proxy = ModelProxy(self.model_file)
+        kwargs["force_cpu"] = self._force_cpu
         try:
             return model_proxy(*args, **kwargs)
         except:
