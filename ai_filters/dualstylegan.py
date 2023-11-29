@@ -41,4 +41,5 @@ class DualStyleGAN(FilterBase):
         self.model_file = "DualStyleGAN.py"
         name = self.style_list[style_num][0]
         result = self.predict(img, self.style_list[style_num][1], style_id, style_degree, color_transfer, keep_size)
-        layer = self.create_layer(result, reposition=True)
+        if result:
+            layer = self.create_layer(result, reposition=True)

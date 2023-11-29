@@ -32,4 +32,5 @@ class SemanticSegmentation(FilterBase):
         self.model_file = "DeepLabV3.py"
         name = self.model_list[model_num][0]
         result = self.predict(img, self.model_list[model_num])
-        layer = self.create_layer(result, reposition=True)
+        if result:
+            layer = self.create_layer(result, reposition=True)

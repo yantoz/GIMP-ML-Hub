@@ -33,4 +33,5 @@ class ESRGAN(FilterBase):
         self.model_file = "esrgan.py"
         name = self.model_list[model_num]
         result = self.predict(img, name)
-        doc = self.create_image(result)
+        if result:
+            doc = self.create_image(result)

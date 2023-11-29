@@ -16,4 +16,5 @@ class Deblur(FilterBase):
     def run(self, img, bounds):
         self.model_file = "DeblurGANv2.py"
         result = self.predict(img)
-        layer = self.create_layer(result, reposition=True)
+        if result:
+            layer = self.create_layer(result, reposition=True)

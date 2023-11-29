@@ -18,6 +18,9 @@ from .esrgan import ESRGAN
 from .semantic_segmentation import SemanticSegmentation
 from .deblur import Deblur
 
+STR_APPLY = "Apply Filter"
+STR_CANCEL = "Cancel"
+
 class MessageLine(QLabel):
 
     def __init__(self, str=None):
@@ -126,12 +129,14 @@ class AIFiltersDocker(DockWidget):
         frame_layout.addWidget(self.message)
         frame_layout.addWidget(self.filter_options)
 
-        self.applyButton = QPushButton("Apply Filter", self)
+        self.applyButton = QPushButton(STR_APPLY, self)
         self.applyButton.clicked.connect(self.apply)
         frame_layout.addWidget(self.applyButton)
         
         self.setWidget(frame)
         self.checkEnabled()
+
+        self.components = [filter_select_row, self.filter_options, self.applyButton]
 
     def checkEnabled(self):
         index = self.filter_select.currentIndex()
@@ -156,11 +161,21 @@ class AIFiltersDocker(DockWidget):
         self.message.setText(message)
 
     def apply(self):
-        self.applyButton.setEnabled(False)
         index = self.filter_select.currentIndex()
-        self.filter_options.widget(index).run_outer(self.updateMessage)
-        self.updateMessage("")
-        self.checkEnabled()
+        if self.applyButton.text() == STR_CANCEL:
+            self.filter_options.widget(index).kill()
+        else:
+            for component in self.components:
+                component.setEnabled(False)
+            index = self.filter_select.currentIndex()
+            self.applyButton.setText(STR_CANCEL)
+            self.applyButton.setEnabled(True)
+            self.filter_options.widget(index).run_outer(self.updateMessage)
+            self.updateMessage("")
+            self.applyButton.setText(STR_APPLY)
+            for component in self.components:
+                component.setEnabled(True)
+            self.checkEnabled()
 
     def canvasChanged(self, canvas):
         self.checkEnabled()

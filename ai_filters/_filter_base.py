@@ -8,7 +8,7 @@ from xmlrpc.server import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
 from abc import ABCMeta, abstractmethod
 from enum import Enum
 
-from PyQt5.QtWidgets import QWidget, QComboBox, QLineEdit, QCheckBox
+from PyQt5.QtWidgets import QApplication, QWidget, QComboBox, QLineEdit, QCheckBox
 
 from ._config import python3_executable, torch_home
 
@@ -100,6 +100,7 @@ class FilterBase(QWidget):
         self.info = info
         self._params = params
         self._bounds = None
+        self._model_proxy = None
         self._message = self.__dummy
         self.initUI()
 
@@ -232,14 +233,19 @@ class FilterBase(QWidget):
 
     def predict(self, *args, **kwargs):
         assert self.model_file is not None
-        model_proxy = ModelProxy(self, self.model_file)
+        self._model_proxy = ModelProxy(self, self.model_file)
         try:
-            result = model_proxy(*args, **kwargs)
+            result = self._model_proxy(*args, **kwargs)
+            self._model_proxy = None
             return result
         except Exception as e:
             message = [m for m in str(e).split("\n") if m.strip()][-1]
             self._message(message)
             raise
+
+    def kill(self):
+        if self._model_proxy:
+            self._model_proxy.kill()
 
 
 class ModelProxy(object):
@@ -254,6 +260,7 @@ class ModelProxy(object):
         self.python_executable = python3_executable
         self.model = model
         self.model_path = os.path.join(models_dir, model_file)
+        self.killswitch = threading.Event()
         self.server = None
         self.args = None
         self.kwargs = None
@@ -312,7 +319,7 @@ class ModelProxy(object):
         ])
         return env
 
-    def _start_subprocess(self, rpc_port):
+    def _start_subprocess(self, rpc_port, killswitch):
         env = self._add_conda_env_to_path()
         # make sure GIMP's Python 2 modules are not on PYTHONPATH
         if 'PYTHONPATH' in env:
@@ -326,8 +333,19 @@ class ModelProxy(object):
                 self.model_path,
                 'http://127.0.0.1:{}/'.format(rpc_port)
             ], env=env)
-            self.proc.wait()
-            log.debug("subprocess done: {}".format(self.proc.returncode))
+            while True:
+                if killswitch.is_set():
+                    self.proc.kill()
+                    log.debug("subprocess killed")
+                    break
+                else:
+                    try:
+                        self.proc.wait(1)
+                    except subprocess.TimeoutExpired:
+                        pass
+                    else:
+                        log.debug("subprocess done: {}".format(self.proc.returncode))
+                        break
         finally:
             self.server.shutdown()
             self.server.server_close()
@@ -352,16 +370,22 @@ class ModelProxy(object):
         rpc_port = self.server.server_address[1]
         return rpc_port
 
+    def kill(self):
+        self.killswitch.set()
+
     def __call__(self, *args, **kwargs):
         self.args = args
         self.kwargs = kwargs
 
         rpc_port = self._init_rpc_server()
-        t = threading.Thread(target=self._start_subprocess, args=(rpc_port,))
+
+        self.killswitch.clear()
+        t = threading.Thread(target=self._start_subprocess, args=(rpc_port,self.killswitch,))
         t.start()
+
         self.server.serve_forever()
 
-        if self.result is None:
+        if self.result is None and not self.killswitch.is_set():
             if self.server.exception:
                 if isinstance(self.server.exception, str):
                     raise RuntimeError(self.server.exception)
@@ -369,7 +393,7 @@ class ModelProxy(object):
                 #raise type, value, traceback
             raise RuntimeError("Model did not return a result!")
 
-        if len(self.result) == 1:
+        if self.result and len(self.result) == 1:
             return self.result[0]
         return self.result
 
