@@ -15,7 +15,7 @@ class DeepLabV3(ModelBase):
         self.model_name = None
 
     def load_model(self):
-        model = torch.hub.load(self.hub_repo, self.model_name, pretrained=True)
+        model = torch.hub.load(self.hub_repo, self.model_name, pretrained=True, map_location='cpu')
         model.eval()
         model.to(self.device)
         return model
