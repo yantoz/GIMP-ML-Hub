@@ -305,6 +305,9 @@ class ModelProxy(object):
             message = "{} ({:.1f}%)".format(message, progress*100.0)
         self.model._message(message)
 
+    def _rpc_heartbeat(self):
+        QApplication.processEvents()
+
     def _add_conda_env_to_path(self):
         env = os.environ.copy()
         conda_root = os.path.dirname(self.python_executable)
@@ -366,6 +369,7 @@ class ModelProxy(object):
         self.server.register_function(self._rpc_return_result, 'return_result')
         self.server.register_function(self._rpc_raise_exception, 'raise_exception')
         self.server.register_function(self._rpc_update_progress, 'update_progress')
+        self.server.register_function(self._rpc_heartbeat, 'heartbeat')
         self.server.exception = None
         rpc_port = self.server.server_address[1]
         return rpc_port

@@ -3,6 +3,8 @@ import traceback
 from abc import ABC, abstractmethod
 from xmlrpc.client import ServerProxy, Binary
 
+import time
+import threading
 import numpy as np
 import torch
 from PIL import Image
@@ -39,6 +41,10 @@ class ModelBase(ABC):
         if self._rpc:
             self._rpc.update_progress(percent, message)
 
+    def heartbeat(self):
+        if self._rpc:
+            self._rpc.heartbeat()
+
     @staticmethod
     def _decode(x):
         if isinstance(x, list) and len(x) == 3 and x[0] == "ImgArray":
@@ -63,11 +69,19 @@ class ModelBase(ABC):
             result = [result]
         return [self._encode(x) for x in result]
 
+    def start_heartbeat(self):
+        def send_heartbeat():
+            while True:
+                self.heartbeat()
+                time.sleep(1)
+        threading.Thread(target=send_heartbeat, daemon=True).start()
+
     def process_rpc(self, rpc_url):
         log.debug("Processing using {}, communicating over {}".format(self.device, rpc_url))
         self._rpc = ServerProxy(rpc_url, allow_none=True)
         try:
             args, kwargs = self._decode_rpc_args(*self._rpc.get_args())
+            self.start_heartbeat()
             log.debug("Input: {}".format(args[0].shape))
             result = self.predict(*args, **kwargs)
             log.debug("Result: {}".format(result.shape))

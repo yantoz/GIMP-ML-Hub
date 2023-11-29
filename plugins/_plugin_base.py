@@ -141,6 +141,9 @@ class ModelProxy(object):
         self.server.exception = exc_string
         threading.Thread(target=lambda: self.server.shutdown()).start()
 
+    def _rpc_heartbeat(self):
+        pass
+
     def _add_conda_env_to_path(self):
         env = os.environ.copy()
         conda_root = os.path.dirname(self.python_executable)
@@ -190,6 +193,7 @@ class ModelProxy(object):
         self.server.register_function(self._rpc_get_args, 'get_args')
         self.server.register_function(self._rpc_return_result, 'return_result')
         self.server.register_function(self._rpc_raise_exception, 'raise_exception')
+        self.server.register_function(self._rpc_heartbeat, 'heartbeat')
         self.server.register_function(update_progress)
         self.server.exception = None
         rpc_port = self.server.server_address[1]
