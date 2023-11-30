@@ -132,6 +132,11 @@ in *IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, 2019.
    * For commercial use please contact the authors
 * Yang, Shuai and Jiang, Liming and Liu, Ziwei and Loy, Chen Change, “[VToonify: Controllable High-Resolution Portrait Video Style Transfer](https://arxiv.org/abs/2209.11224),” in *ACM Transactions on Graphics (TOG)*, vol. 41, 2022, pp. 1-15.
 
+### Rembg - Remove Background
+* Source: https://github.com/danielgatis/rembg
+* Torch Hub fork: https://github.com/yantoz/rembg
+* License: [MIT](https://github.com/danielgatis/rembg/blob/main/LICENSE.txt)
+
 
 # Authors
 * Martin Valgur ([valgur](https://github.com/valgur)) – this version

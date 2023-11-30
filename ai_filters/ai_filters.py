@@ -17,6 +17,7 @@ from .dualstylegan import DualStyleGAN
 from .esrgan import ESRGAN
 from .semantic_segmentation import SemanticSegmentation
 from .deblur import Deblur
+from .rembg import RemBg
 
 STR_APPLY = "Apply Filter"
 STR_CANCEL = "Cancel"
@@ -85,7 +86,7 @@ class AIFiltersDocker(DockWidget):
         super().__init__()
         self.setWindowTitle('AI Filters')
 
-        self.filters = [VToonify(self), DualStyleGAN(self), ESRGAN(self), SemanticSegmentation(self), Deblur(self)]
+        self.filters = [RemBg(self), VToonify(self), DualStyleGAN(self), ESRGAN(self), SemanticSegmentation(self), Deblur(self)]
 
         frame = QWidget(self)
         frame_layout = QVBoxLayout(frame)
