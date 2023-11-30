@@ -151,9 +151,14 @@ class FilterBase(QWidget):
         return {i[1]: i[3] for i in self._params}
 
     @property
-    def activeDocument(self):
+    def app(self):
         from krita import Krita
         app = Krita.instance()
+        return app
+
+    @property
+    def activeDocument(self):
+        app = self.app
         doc = app.activeDocument()
         return doc
 
@@ -165,21 +170,29 @@ class FilterBase(QWidget):
         else:
             return None
 
-    def imgarray_to_qimage(self, x):
+    def imgarray_to_qimage(self, x, mask=False):
         from krita import QImage
-        x = QImage(x.buffer, x.shape[1], x.shape[0], QImage.Format_RGBA8888).rgbSwapped()
+        if mask:
+            x = QImage(x.buffer, x.shape[1], x.shape[0], QImage.Format_Grayscale8)
+        else:
+            x = QImage(x.buffer, x.shape[1], x.shape[0], QImage.Format_RGBA8888).rgbSwapped()
         return x
 
-    def create_layer(self, result, name=None, doc=None, resizeCanvas=False, reposition=False):
+    def create_layer(self, result, name=None, doc=None, mask=False, resizeCanvas=False, reposition=False):
         name = name or self.activeLayer.name() + ' ' + self.name
 
         if doc is None:
             doc = self.activeDocument
 
-        layer = doc.createNode(name, "paintlayer")
-        doc.rootNode().addChildNode(layer, None)
-        img = self.imgarray_to_qimage(result)
+        if mask:
+            self.app.action('add_new_transparency_mask').trigger()
+            layer = self.activeLayer
+            layer.setName(name)
+        else:
+            layer = doc.createNode(name, "paintlayer")
+            doc.rootNode().addChildNode(layer, None)
 
+        img = self.imgarray_to_qimage(result, mask=mask)
         ptr = img.constBits() 
         ptr.setsize(img.byteCount())
         layer.setPixelData(bytearray(ptr), 0, 0, result.shape[1], result.shape[0])
@@ -193,7 +206,10 @@ class FilterBase(QWidget):
         if reposition and self._bounds:
             layer.move(self._bounds.x(), self._bounds.y())
 
-        doc.setActiveNode(layer)
+        if mask:
+            doc.setActiveNode(layer.parentNode())
+        else:
+            doc.setActiveNode(layer)
         doc.refreshProjection()
 
         return layer
