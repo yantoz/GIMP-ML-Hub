@@ -18,3 +18,6 @@ webdataset
 omegaconf
 dlib==19.21.0
 opencv-python==4.5.3.56
+pooch==1.8.0
+jsonschema==4.20.0
+jsonschema-specifications==2023.11.1
