@@ -8,8 +8,18 @@ from xmlrpc.server import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
 from abc import ABCMeta, abstractmethod
 from enum import Enum
 
-from PyQt5.QtWidgets import QApplication, QWidget, QComboBox, QLineEdit, QCheckBox
-
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import (
+    QApplication,
+    QWidget,
+    QComboBox,
+    QLineEdit,
+    QCheckBox,
+    QSlider,
+    QHBoxLayout,
+    QRadioButton,
+)
+from .qrangeslider import QRangeSlider
 from ._config import python3_executable, torch_home
 
 base_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), '..'))
@@ -76,11 +86,67 @@ class ParamBool(ParamWidget, QCheckBox):
     def __init__(self, param):
         ParamWidget.__init__(self, param)
         QCheckBox.__init__(self)
-        self.setCheckState(self._param[3])
+        self.setChecked(self._param[3])
         self.stateChanged.connect(self._update)
 
     def _update(self):
         self._param[3] = self.isChecked()
+
+class ParamSlider(ParamWidget, QSlider):
+    def __init__(self, param):
+        ParamWidget.__init__(self, param)
+        QSlider.__init__(self, Qt.Orientation.Horizontal)
+        try:
+            range = self._param[4]
+        except:
+            range = (0,255)
+        self.setRange(range[0], range[1])
+        self.setValue(self._param[3])
+        self.valueChanged.connect(self._update)
+
+    def _update(self, value):
+        self._param[3] = value
+
+class ParamRangeSlider(ParamWidget, QRangeSlider):
+    def __init__(self, param):
+        ParamWidget.__init__(self, param)
+        QRangeSlider.__init__(self)
+        try:
+            range = self._param[4]
+        except:
+            range = (0,255)
+        self.setMin(range[0])
+        self.setMax(range[1])
+        self.setStart(self._param[3][0])
+        self.setEnd(self._param[3][1])
+        self.startValueChanged.connect(self._updateStart)
+        self.endValueChanged.connect(self._updateEnd)
+
+    def _updateStart(self, value):
+        self._param[3][0] = value
+
+    def _updateEnd(self, value):
+        self._param[3][1] = value
+
+class ParamRadio(ParamWidget, QWidget):
+    def __init__(self, param):
+        ParamWidget.__init__(self, param)
+        QWidget.__init__(self)
+        layout = QHBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
+        for i, item in enumerate(self._param[4]):
+            r = QRadioButton(item)
+            r.setChecked(i == self._param[3])
+            r.toggled.connect(self._update)
+            layout.addWidget(r)
+        layout.addStretch()
+        self.setLayout(layout)
+
+    def _update(self):
+        radio = self.sender()
+        value = self._param[4].index(radio.text())
+        if radio.isChecked():
+            self._param[3] = value
 
 class Type(Enum):
     OPTION = ParamOption
@@ -88,6 +154,9 @@ class Type(Enum):
     FLOAT = ParamFloat
     STRING = ParamString
     BOOL = ParamBool
+    SLIDER = ParamSlider
+    RADIO = ParamRadio
+    RANGE = ParamRangeSlider
 
 class FilterBase(QWidget):
     __metaclass__ = ABCMeta
@@ -176,6 +245,13 @@ class FilterBase(QWidget):
             x = QImage(x.buffer, x.shape[1], x.shape[0], QImage.Format_Grayscale8)
         else:
             x = QImage(x.buffer, x.shape[1], x.shape[0], QImage.Format_RGBA8888).rgbSwapped()
+        return x
+
+    def qimage_to_imgarray(self, x):
+        rect = x.rect()
+        ptr = x.constBits()
+        ptr.setsize(x.byteCount())
+        x = ImgArray(bytearray(ptr), (rect.height(), rect.width(), 4))
         return x
 
     def create_layer(self, result, name=None, doc=None, mask=False, resizeCanvas=False, reposition=False):
