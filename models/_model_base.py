@@ -22,6 +22,8 @@ class ModelBase(ABC):
         self.device = None
         self._rpc = None
         self._model = None
+        self._exception = None
+        self._mutex = threading.Lock()
 
     @property
     def model(self):
@@ -39,12 +41,18 @@ class ModelBase(ABC):
         raise NotImplementedError
 
     def update_progress(self, percent, message):
-        if self._rpc:
+        try:
             self._rpc.update_progress(percent, message)
+        except:
+            pass
 
     def heartbeat(self):
-        if self._rpc:
-            self._rpc.heartbeat()
+        self._mutex.acquire()
+        try:
+            if self._exception is None:
+                self._rpc.heartbeat()
+        finally:
+            self._mutex.release()
 
     @staticmethod
     def _decode(x):
@@ -79,6 +87,7 @@ class ModelBase(ABC):
 
     def process_rpc(self, rpc_url):
         log.debug("Processing using communication over {}".format(rpc_url))
+        self._exception = None
         self._rpc = ServerProxy(rpc_url, allow_none=True)
         try:
             args, kwargs = self._decode_rpc_args(*self._rpc.get_args())
@@ -103,8 +112,12 @@ class ModelBase(ABC):
             log.debug("Result: {}".format(result.shape))
         except Exception as e:
             log.debug(e)
+            self._mutex.acquire()
+            self._exception = e
+            self._mutex.release()
             self._rpc.raise_exception(traceback.format_exc())
             return
+
         result = self._encode_rpc_result(result)
         self._rpc.return_result(result)
 
