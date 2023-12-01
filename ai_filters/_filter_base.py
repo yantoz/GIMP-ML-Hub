@@ -171,7 +171,7 @@ class FilterBase(QWidget):
         self._bounds = None
         self._force_cpu = False
         self._model_proxy = None
-        self._message = self.__dummy
+        self._message = None
         self.initUI()
 
     @abstractmethod
@@ -301,8 +301,9 @@ class FilterBase(QWidget):
         app.activeWindow().addView(doc)
         return doc
 
-    def __dummy(self, x):
-        pass
+    def message(self, str=""):
+        if self._message:
+            self._message(str)
 
     def enabled(self):
         # A/RGBA/XYZA/LABA/CMYKA/GRAYA/YCbCrA
@@ -314,14 +315,14 @@ class FilterBase(QWidget):
 
     def run_outer(self, message_cb=None):
         from krita import QImage
-        self._message = message_cb or self.__dummy
+        self._message = message_cb
         layer = self.activeLayer
         bounds = layer.bounds()
         self._bounds = bounds
         data = layer.projectionPixelData(bounds.x(), bounds.y(), bounds.width(), bounds.height())
         img = QImage(data, bounds.width(), bounds.height(), QImage.Format_RGBA8888).rgbSwapped()
         print("Running {}...".format(self.name))
-        self._message("Running {}...".format(self.name))
+        self.message("Running {}...".format(self.name))
         self.run(img, bounds)
 
     def predict(self, *args, **kwargs):
@@ -334,7 +335,7 @@ class FilterBase(QWidget):
             return result
         except Exception as e:
             message = [m for m in str(e).split("\n") if m.strip()][-1]
-            self._message(message)
+            self.message(message)
             raise
 
     def kill(self):
@@ -397,7 +398,7 @@ class ModelProxy(object):
     def _rpc_update_progress(self, progress, message):
         if progress:
             message = "{} ({:.1f}%)".format(message, progress*100.0)
-        self.model._message(message)
+        self.model.message(message)
 
     def _rpc_heartbeat(self):
         QApplication.processEvents()
@@ -489,7 +490,7 @@ class ModelProxy(object):
                     raise RuntimeError(self.server.exception)
                 type, value, traceback = self.server.exception
                 #raise type, value, traceback
-            self.model._message("Model did not return a result!")
+            self.model.message("Model did not return a result!")
 
         if self.result and len(self.result) == 1:
             return self.result[0]
