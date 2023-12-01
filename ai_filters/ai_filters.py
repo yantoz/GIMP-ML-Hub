@@ -1,3 +1,5 @@
+import time
+
 from PyQt5.QtWidgets import (
     QApplication,
     QWidget,
@@ -132,6 +134,7 @@ class AIFiltersDocker(DockWidget):
         frame_layout.addWidget(self.filter_options)
 
         self.applyButton = QPushButton(STR_APPLY, self)
+        self.applyButton_time = 0
         self.applyButton.clicked.connect(self.apply)
         frame_layout.addWidget(self.applyButton)
         
@@ -162,18 +165,31 @@ class AIFiltersDocker(DockWidget):
     def updateMessage(self, message):
         self.message.setText(message)
 
+    def setRunning(self, running):
+        if running:
+           self.applyButton.setText(STR_CANCEL)
+        else:
+           self.applyButton.setText(STR_APPLY)
+        self.applyButton_time = time.time()
+
+    def isRunning(self):
+        return (self.applyButton.text() == STR_CANCEL)
+
     def apply(self):
+        if time.time()-self.applyButton_time < 1:
+            return
+        self.applyButton_time = time.time()
         index = self.filter_select.currentIndex()
-        if self.applyButton.text() == STR_CANCEL:
+        if self.isRunning():
             self.filter_options.widget(index).kill()
         else:
             for component in self.components:
                 component.setEnabled(False)
             index = self.filter_select.currentIndex()
-            self.applyButton.setText(STR_CANCEL)
+            self.setRunning(True)
             self.applyButton.setEnabled(True)
             self.filter_options.widget(index).run_outer(self.updateMessage)
-            self.applyButton.setText(STR_APPLY)
+            self.setRunning(False)
             for component in self.components:
                 component.setEnabled(True)
             self.checkEnabled()
