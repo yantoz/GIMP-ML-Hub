@@ -36,3 +36,4 @@ class SemanticSegmentation(FilterBase):
         result = self.predict(img, self.model_list[model_num])
         if result:
             layer = self.create_layer(result, reposition=True)
+            self.message()

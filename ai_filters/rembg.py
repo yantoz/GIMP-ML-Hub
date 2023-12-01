@@ -38,3 +38,4 @@ class RemBg(FilterBase):
         result = self.predict(img, mask, model=model_name)
         if result:
             layer = self.create_layer(result, mask=mask, reposition=True)
+            self.message()

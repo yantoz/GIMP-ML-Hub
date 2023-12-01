@@ -37,3 +37,4 @@ class ESRGAN(FilterBase):
         result = self.predict(img, name)
         if result:
             doc = self.create_image(result)
+            self.message()

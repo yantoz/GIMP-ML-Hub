@@ -172,7 +172,6 @@ class AIFiltersDocker(DockWidget):
             self.applyButton.setText(STR_CANCEL)
             self.applyButton.setEnabled(True)
             self.filter_options.widget(index).run_outer(self.updateMessage)
-            self.updateMessage("")
             self.applyButton.setText(STR_APPLY)
             for component in self.components:
                 component.setEnabled(True)

@@ -24,3 +24,4 @@ class Deblur(FilterBase):
         result = self.predict(img)
         if result:
             layer = self.create_layer(result, reposition=True)
+            self.message()
