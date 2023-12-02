@@ -120,7 +120,7 @@ in *IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, 2019.
 * Source: https://github.com/williamyang1991/DualStyleGAN
 * Torch Hub fork: https://github.com/yantoz/DualStyleGAN
 * License:
-   * See the [license file](https://github.com/williamyang1991/DualStyleGAN/blob/main/LICENSE.md) for terms
+   * See the [license file](https://raw.githubusercontent.com/williamyang1991/DualStyleGAN/main/LICENSE.md) for terms
    * For commercial use please contact the authors
 * Yang, Shuai and Jiang, Liming and Liu, Ziwei and Loy, Chen Change, “[Pastiche Master: Exemplar-Based High-Resolution Portrait Style Transfer](https://arxiv.org/abs/2203.13248),” in *CVPR*, 2022.
 
@@ -128,15 +128,19 @@ in *IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, 2019.
 * Source: https://github.com/williamyang1991/VToonify
 * Torch Hub fork: https://github.com/yantoz/VToonify
 * License: 
-   * See the [license file](https://github.com/williamyang1991/VToonify/blob/main/LICENSE.md) for terms
+   * See the [license file](https://raw.githubusercontent.com/williamyang1991/VToonify/main/LICENSE.md) for terms
    * For commercial use please contact the authors
 * Yang, Shuai and Jiang, Liming and Liu, Ziwei and Loy, Chen Change, “[VToonify: Controllable High-Resolution Portrait Video Style Transfer](https://arxiv.org/abs/2209.11224),” in *ACM Transactions on Graphics (TOG)*, vol. 41, 2022, pp. 1-15.
 
 ### Rembg - Remove Background
 * Source: https://github.com/danielgatis/rembg
 * Torch Hub fork: https://github.com/yantoz/rembg
-* License: [MIT](https://github.com/danielgatis/rembg/blob/main/LICENSE.txt)
+* License: [MIT](https://raw.githubusercontent.com/danielgatis/rembg/main/LICENSE.txt)
 
+### Segment Anything (via Rembg)
+* Source: https://github.com/facebookresearch/segment-anything
+* License: [Apache 2.0](https://raw.githubusercontent.com/facebookresearch/segment-anything/main/LICENSE)
+* Kirillov, Alexander and Mintun, Eric and Ravi, Nikhila and Mao, Hanzi and Rolland, Chloe and Gustafson, Laura and Xiao, Tete and Whitehead, Spencer and Berg, Alexander C. and Lo, Wan-Yen and Dollàr, Piotr and Girshick, Ross, “[Segment Anything](https://arxiv.org/abs/2304.02643),” in *CVPR*, 2023.
 
 # Authors
 * Martin Valgur ([valgur](https://github.com/valgur)) – this version
