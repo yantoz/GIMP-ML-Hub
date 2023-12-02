@@ -11,7 +11,8 @@ class Deblur(GimpPluginBase):
     def run(self):
         self.model_file = 'DeblurGANv2.py'
         result = self.predict(self.drawable)
-        self.create_layer(result)
+        if result:
+            self.create_layer(result)
 
 
 plugin = Deblur()

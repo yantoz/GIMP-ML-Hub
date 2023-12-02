@@ -11,6 +11,8 @@ class WaifuXL(GimpPluginBase):
     def run(self):
         self.model_file = 'WaifuXL.py'
         result = self.predict(self.drawable)
+        if not result:
+            return
         h, w, d = result.shape
         self.gimp_img.resize(w, h, 0, 0)
         self.create_layer(result)

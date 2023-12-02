@@ -24,7 +24,8 @@ class LamaInpaint(GimpPluginBase):
             gimp.message(error_info)
             raise
         result = self.predict(layer, mask=mask)
-        self.create_layer(result)
+        if result:
+            self.create_layer(result)
 
 
 plugin = LamaInpaint()

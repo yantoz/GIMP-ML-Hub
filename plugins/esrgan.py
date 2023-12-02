@@ -13,6 +13,8 @@ class ESRGAN(GimpPluginBase):
         self.name = _model_list[model_num]
         gfu.gimp.progress_init("Running {}...".format(self.name))
         result = self.predict(self.drawable, self.name)
+        if not result:
+           return
         h, w, _ = result.shape
         self.gimp_img.resize(w, h, 0, 0)
         self.create_layer(

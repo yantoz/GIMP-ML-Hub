@@ -9,6 +9,9 @@ import traceback
 from SimpleXMLRPCServer import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
 from abc import ABCMeta, abstractmethod
 
+import gtk
+import time
+
 import gimpfu as gfu
 from gimpfu import gimp, pdb
 
@@ -19,6 +22,7 @@ models_dir = os.path.join(base_dir, 'models')
 
 import logging
 
+#logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger("plugin_base")
 
 
@@ -31,6 +35,7 @@ class GimpPluginBase(object):
         self.drawable = None
         self.name = None
         self._force_cpu = False
+        self._model_proxy = None
 
     @abstractmethod
     def run(self, *args, **kwargs):
@@ -69,21 +74,41 @@ class GimpPluginBase(object):
             domain=domain, on_query=on_query, on_run=on_run
         )
 
+    def _interrupt(self, dialog, response):
+        self.kill()
+
     def run_outer(self, gimp_img, drawable, *extra_args):
         self.gimp_img = gimp_img
         self.drawable = drawable
         print("Running {}...".format(self.name))
         pdb.gimp_image_undo_group_start(self.gimp_img)
         gimp.progress_init("Running {}...".format(self.name))
+
+        intrDialog = gtk.MessageDialog(
+            None,
+            0,
+            gtk.MESSAGE_INFO,
+            gtk.BUTTONS_CANCEL,
+            "Plugin is running. Click cancel to interrupt..."
+        )
+        #intrDialog.set_position(gtk.WIN_POS_CENTER)
+        intrDialog.show()
+        intrDialog.connect("response", self._interrupt)
+        intrDialog.set_keep_above(True)
+
         self.run(*extra_args)
+
+        intrDialog.destroy()
         pdb.gimp_image_undo_group_end(self.gimp_img)
 
     def predict(self, *args, **kwargs):
         assert self.model_file is not None
-        model_proxy = ModelProxy(self.model_file)
+        self._model_proxy = ModelProxy(self.model_file)
         kwargs["force_cpu"] = self._force_cpu
         try:
-            return model_proxy(*args, **kwargs)
+            result = self._model_proxy(*args, **kwargs)
+            self._model_proxy = None
+            return result
         except:
             error_info = self._format_error(traceback.format_exc())
             gimp.message(error_info)
@@ -95,6 +120,10 @@ class GimpPluginBase(object):
             return ("Not enough GPU memory available to run the model with given input image size. "
                     "Try reducing the input layer's dimensions.\n\n" + exception_msg)
         return formatted_exception
+
+    def kill(self):
+        if self._model_proxy:
+            self._model_proxy.kill()
 
 
 class ModelProxy(object):
@@ -108,6 +137,7 @@ class ModelProxy(object):
     def __init__(self, model_file):
         self.python_executable = python3_executable
         self.model_path = os.path.join(models_dir, model_file)
+        self.killswitch = threading.Event()
         self.server = None
         self.args = None
         self.kwargs = None
@@ -144,7 +174,8 @@ class ModelProxy(object):
         threading.Thread(target=lambda: self.server.shutdown()).start()
 
     def _rpc_heartbeat(self):
-        pass
+        while gtk.events_pending():
+            gtk.main_iteration()
 
     def _add_conda_env_to_path(self):
         env = os.environ.copy()
@@ -160,7 +191,7 @@ class ModelProxy(object):
         ])
         return env
 
-    def _start_subprocess(self, rpc_port):
+    def _start_subprocess(self, rpc_port, killswitch):
         env = self._add_conda_env_to_path()
         # make sure GIMP's Python 2 modules are not on PYTHONPATH
         if 'PYTHONPATH' in env:
@@ -174,8 +205,17 @@ class ModelProxy(object):
                 self.model_path,
                 'http://127.0.0.1:{}/'.format(rpc_port)
             ], env=env)
-            self.proc.wait()
-            log.debug("subprocess done: {}".format(self.proc.returncode))
+            while True:
+                if killswitch.is_set():
+                    self.proc.kill()
+                    log.debug("subprocess killed")
+                    break
+                else:
+                    if self.proc.poll() is None:
+                        time.sleep(1)
+                    else:
+                        log.debug("subprocess done: {}".format(self.proc.returncode))
+                        break
         finally:
             self.server.shutdown()
             self.server.server_close()
@@ -201,16 +241,20 @@ class ModelProxy(object):
         rpc_port = self.server.server_address[1]
         return rpc_port
 
+    def kill(self):
+        self.killswitch.set()
+
     def __call__(self, *args, **kwargs):
         self.args = args
         self.kwargs = kwargs
 
         rpc_port = self._init_rpc_server()
-        t = threading.Thread(target=self._start_subprocess, args=(rpc_port,))
+        self.killswitch.clear()
+        t = threading.Thread(target=self._start_subprocess, args=(rpc_port,self.killswitch,))
         t.start()
         self.server.serve_forever()
 
-        if self.result is None:
+        if self.result is None and not self.killswitch.is_set():
             if self.server.exception:
                 if isinstance(self.server.exception, str):
                     raise RuntimeError(self.server.exception)
@@ -218,7 +262,7 @@ class ModelProxy(object):
                 raise type, value, traceback
             raise RuntimeError("Model did not return a result!")
 
-        if len(self.result) == 1:
+        if self.result and len(self.result) == 1:
             return self.result[0]
         return self.result
 

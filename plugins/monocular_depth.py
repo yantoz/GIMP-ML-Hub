@@ -17,6 +17,8 @@ class DepthEstimation(GimpPluginBase):
         display_name, self.model_file = self.model_options[model_idx]
         colormap = "magma" if apply_colormap else None
         result = self.predict(self.drawable, colormap)
+        if not result:
+            return
         layer_name = self.drawable.name + " " + display_name.split()[0]
         self.create_layer(result, name=layer_name)
 

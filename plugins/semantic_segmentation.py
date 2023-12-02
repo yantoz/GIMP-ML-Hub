@@ -13,6 +13,8 @@ class SemanticSegmentation(GimpPluginBase):
         self.name = _model_list[model_num][0]
         gfu.gimp.progress_init("Running {}...".format(self.name))
         result = self.predict(self.drawable, _model_list[model_num])
+        if not result:
+            return
         self.create_layer(
             result, name=self.drawable.name + ":" + _model_list[model_num][0]
         )

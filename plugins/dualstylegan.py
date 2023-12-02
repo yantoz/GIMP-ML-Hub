@@ -15,6 +15,8 @@ class DualStyleGAN(GimpPluginBase):
         gfu.gimp.progress_init("Running DualStyleGAN ({}) ...".format(self.name))
         layer = self.drawable
         result = self.predict(layer, _style_list[style_num][1], style_id, style_degree, color_transfer, keep_size)
+        if not result:
+            return
         #h, w, _ = result.shape
         #self.gimp_img.resize(w, h, 0, 0)
         newlayer = self.create_layer(

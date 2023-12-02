@@ -14,7 +14,8 @@ class Colorize(GimpPluginBase):
         result = self.predict(self.drawable)
         if self.gimp_img.base_type != gfu.RGB:
             pdb.gimp_image_convert_rgb(self.gimp_img)
-        self.create_layer(result)
+        if result:
+            self.create_layer(result)
 
 
 plugin = Colorize()
