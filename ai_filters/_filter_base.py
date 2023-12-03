@@ -484,13 +484,16 @@ class ModelProxy(object):
 
         self.server.serve_forever()
 
-        if self.result is None and not self.killswitch.is_set():
-            if self.server.exception:
-                if isinstance(self.server.exception, str):
-                    raise RuntimeError(self.server.exception)
-                type, value, traceback = self.server.exception
-                #raise type, value, traceback
-            self.model.message("Model did not return a result!")
+        if self.result is None:
+            if self.killswitch.is_set():
+                self.model.message("Cancelled")
+            else:
+                if self.server.exception:
+                    if isinstance(self.server.exception, str):
+                        raise RuntimeError(self.server.exception)
+                    type, value, traceback = self.server.exception
+                    #raise type, value, traceback
+                self.model.message("Model did not return a result!")
 
         if self.result and len(self.result) == 1:
             return self.result[0]

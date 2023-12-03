@@ -188,11 +188,15 @@ class AIFiltersDocker(DockWidget):
             index = self.filter_select.currentIndex()
             self.setRunning(True)
             self.applyButton.setEnabled(True)
-            self.filter_options.widget(index).run_outer(self.updateMessage)
-            self.setRunning(False)
-            for component in self.components:
-                component.setEnabled(True)
-            self.checkEnabled()
+            try:
+                self.filter_options.widget(index).run_outer(self.updateMessage)
+            except:
+                raise
+            finally:
+                self.setRunning(False)
+                for component in self.components:
+                    component.setEnabled(True)
+                self.checkEnabled()
 
     def canvasChanged(self, canvas):
         self.checkEnabled()
