@@ -142,6 +142,18 @@ in *IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, 2019.
 * License: [Apache 2.0](https://raw.githubusercontent.com/facebookresearch/segment-anything/main/LICENSE)
 * Kirillov, Alexander and Mintun, Eric and Ravi, Nikhila and Mao, Hanzi and Rolland, Chloe and Gustafson, Laura and Xiao, Tete and Whitehead, Spencer and Berg, Alexander C. and Lo, Wan-Yen and Dollàr, Piotr and Girshick, Ross, “[Segment Anything](https://arxiv.org/abs/2304.02643),” in *CVPR*, 2023.
 
+### AnimeGAN
+* v3
+   * Source (v3): https://github.com/TachibanaYoshino/AnimeGANv3
+   * Torch Hub fork: https://github.com/yantoz/AnimeGANv3
+   * Homepage: https://tachibanayoshino.github.io/AnimeGANv3/
+   * License: [Non-commerical](https://github.com/TachibanaYoshino/AnimeGANv3#scroll-license)
+* v2
+   * Source (v2): https://github.com/TachibanaYoshino/AnimeGANv2
+   * Homepage: https://tachibanayoshino.github.io/AnimeGANv2/
+   * License: [Non-commercial](https://github.com/TachibanaYoshino/AnimeGANv2#license)
+* Gang Liu and Xin Chen and Zhixiang Gao, “A Novel Double-Tail Generative Adversarial Network for Fast Photo Animation,” in *IEICE Transactions on Information and Systems*, 2024.
+
 # Authors
 * Martin Valgur ([valgur](https://github.com/valgur)) – this version
 * Kritik Soman ([kritiksoman](https://github.com/kritiksoman)) – original GIMP-ML implementation
