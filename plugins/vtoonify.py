@@ -9,12 +9,12 @@ from _plugin_base import GimpPluginBase
 
 class VToonify(GimpPluginBase):
 
-    def run(self, style_num, style_id, style_degree, color_transfer, keep_size):
+    def run(self, style_num, style_id, style_degree, color_transfer, keep_size, force_cpu):
         self.model_file = "VToonify.py"
         self.name = _style_list[style_num][0]
         gfu.gimp.progress_init("Running VToonify ({}) ...".format(self.name))
         layer = self.drawable
-        result = self.predict(layer, _style_list[style_num][1], style_id, style_degree, color_transfer, keep_size)
+        result = self.predict(layer, _style_list[style_num][1], style_id, style_degree, color_transfer, keep_size, force_cpu=force_cpu)
         if not result:
             return
         #h, w, _ = result.shape
@@ -44,19 +44,19 @@ _style_params = (name for i, (name, style) in enumerate(_style_list))
 plugin = VToonify()
 plugin.register(
     proc_name="vtoonify",
-    blurb="VToonify\nSee: https://github.com/williamyang1991/DualStyleGAN/tree/main/doc_images",
-    help="Controllable High-Resolution Portrait Video Style Transfer",
+    blurb="VToonify\nControllable High-Resolution Portrait Video Style Transfer",
+    help="https://github.com/williamyang1991/DualStyleGAN/tree/main/doc_images",
     author="yantoz",
     copyright="",
     date="2023",
     label="Style Transfer (VToonify) ...",
     imagetypes="RGB*",
     params=[
-        (gfu.PF_OPTION, "style", "Style:", 0, _style_params),
-        (gfu.PF_INT,    "style_id", "Style ID", 26),
-        (gfu.PF_FLOAT,  "style_degree", "Style Degree", 0.5),
+        (gfu.PF_OPTION, "style",          "Style:",         0,       _style_params),
+        (gfu.PF_INT,    "style_id",       "Style ID",       26),
+        (gfu.PF_FLOAT,  "style_degree",   "Style Degree",   0.5),
         (gfu.PF_BOOL,   "color_transfer", "Color Transfer", False),
-        (gfu.PF_BOOL,   "keep_size", "Keep Size", True),
+        (gfu.PF_BOOL,   "keep_size",      "Keep Size",      True),
+        (gfu.PF_BOOL,   "force_cpu",      "Force CPU",      False),
     ],
 )
-gfu.main()

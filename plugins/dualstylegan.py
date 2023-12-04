@@ -9,12 +9,12 @@ from _plugin_base import GimpPluginBase
 
 class DualStyleGAN(GimpPluginBase):
 
-    def run(self, style_num, style_id, style_degree, color_transfer, keep_size):
+    def run(self, style_num, style_id, style_degree, color_transfer, keep_size, force_cpu):
         self.model_file = "DualStyleGAN.py"
         self.name = _style_list[style_num][0]
         gfu.gimp.progress_init("Running DualStyleGAN ({}) ...".format(self.name))
         layer = self.drawable
-        result = self.predict(layer, _style_list[style_num][1], style_id, style_degree, color_transfer, keep_size)
+        result = self.predict(layer, _style_list[style_num][1], style_id, style_degree, color_transfer, keep_size, force_cpu=force_cpu)
         if not result:
             return
         #h, w, _ = result.shape
@@ -40,19 +40,19 @@ _style_params = (name for i, (name, style) in enumerate(_style_list))
 plugin = DualStyleGAN()
 plugin.register(
     proc_name="dualstylegan",
-    blurb="DualStyleGAN\nSee: https://github.com/williamyang1991/DualStyleGAN/tree/main/doc_images",
-    help="Exemplar-Based High-Resolution Portrait Style Transfer",
+    blurb="DualStyleGAN\nExemplar-Based Hi-Res Portrait Style Transfer",
+    help="https://github.com/williamyang1991/DualStyleGAN/tree/main/doc_images",
     author="yantoz",
     copyright="",
     date="2023",
     label="Style Transfer (DualStyleGAN) ...",
     imagetypes="RGB*",
     params=[
-        (gfu.PF_OPTION, "style", "Style:", 0, _style_params),
-        (gfu.PF_INT,    "style_id", "Style ID", 26),
-        (gfu.PF_FLOAT,  "style_degree", "Style Degree", 0.5),
+        (gfu.PF_OPTION, "style",          "Style:",         0,      _style_params),
+        (gfu.PF_INT,    "style_id",       "Style ID",       26),
+        (gfu.PF_FLOAT,  "style_degree",   "Style Degree",   0.5),
         (gfu.PF_BOOL,   "color_transfer", "Color Transfer", False),
-        (gfu.PF_BOOL,   "keep_size", "Keep Size", True),
+        (gfu.PF_BOOL,   "keep_size",      "Keep Size",      True),
+        (gfu.PF_BOOL,   "force_cpu",      "Force CPU",      False),
     ],
 )
-gfu.main()

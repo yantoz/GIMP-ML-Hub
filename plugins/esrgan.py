@@ -8,11 +8,11 @@ from _plugin_base import GimpPluginBase
 
 
 class ESRGAN(GimpPluginBase):
-    def run(self, model_num):
+    def run(self, model_num, force_cpu):
         self.model_file = "esrgan.py"
         self.name = _model_list[model_num]
         gfu.gimp.progress_init("Running {}...".format(self.name))
-        result = self.predict(self.drawable, self.name)
+        result = self.predict(self.drawable, self.name, force_cpu=force_cpu)
         if not result:
            return
         h, w, _ = result.shape
@@ -35,13 +35,15 @@ _model_list = [
 plugin = ESRGAN()
 plugin.register(
     proc_name="esrgan",
-    blurb="esrgan",
-    help="Upscale image using Real-ESRGAN (https://github.com/xinntao/Real-ESRGAN)",
+    blurb="Real-ESRGAN\nSuper Resolution",
+    help="https://github.com/xinntao/Real-ESRGAN",
     author="yantoz",
     copyright="",
     date="2023",
     label="Super Resolution (Real-ESRGAN) ...",
     imagetypes="RGB*",
-    params=[(gfu.PF_OPTION, "Model", "Choose model:", 0, _model_list)],
+    params=[
+        (gfu.PF_OPTION, "Model",     "Choose model:", 0,       _model_list),
+        (gfu.PF_BOOL,   "force_cpu", "Force CPU",     False),
+    ],
 )
-gfu.main()

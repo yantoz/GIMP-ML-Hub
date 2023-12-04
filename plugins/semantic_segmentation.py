@@ -8,11 +8,11 @@ from _plugin_base import GimpPluginBase
 
 
 class SemanticSegmentation(GimpPluginBase):
-    def run(self, model_num):
+    def run(self, model_num, force_cpu):
         self.model_file = "DeepLabV3.py"
         self.name = _model_list[model_num][0]
         gfu.gimp.progress_init("Running {}...".format(self.name))
-        result = self.predict(self.drawable, _model_list[model_num])
+        result = self.predict(self.drawable, _model_list[model_num], force_cpu=force_cpu)
         if not result:
             return
         self.create_layer(
@@ -34,13 +34,15 @@ _model_params = (name for i, (name, model) in enumerate(_model_list))
 plugin = SemanticSegmentation()
 plugin.register(
     proc_name="semanticsegmentation",
-    blurb="semanticsegmentation",
-    help="Generate semantic segmentation map based on deep learning.",
+    blurb="DeepLabV3Plus\nSemantic segmentation map based on deep learning",
+    help="https://github.com/joemarshall/DeepLabV3Plus-Pytorch",
     author="Joe Marshall",
     copyright="",
     date="2020",
     label="Semantic Segmentation (DeepLabV3) ...",
     imagetypes="RGB*",
-    params=[(gfu.PF_OPTION, "Model", "Choose model:", 0, _model_params)],
+    params=[
+        (gfu.PF_OPTION, "Model",     "Choose model:", 0,       _model_params),
+        (gfu.PF_BOOL,   "force_cpu", "Force CPU",     False),
+    ],
 )
-gfu.main()

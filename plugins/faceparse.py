@@ -3,14 +3,14 @@ import sys
 from os.path import dirname, realpath
 
 sys.path.append(realpath(dirname(__file__)))
-from gimpfu import main
+import gimpfu as gfu
 from _plugin_base import GimpPluginBase
 
 
 class FaceParse(GimpPluginBase):
-    def run(self):
+    def run(self, force_cpu):
         self.model_file = 'FaceParse_BiSeNet.py'
-        result = self.predict(self.drawable)
+        result = self.predict(self.drawable, force_cpu=force_cpu)
         if result:
             self.create_layer(result)
 
@@ -18,12 +18,14 @@ class FaceParse(GimpPluginBase):
 plugin = FaceParse()
 plugin.register(
     proc_name="faceparse",
-    blurb="faceparse",
-    help="Generate semantic segmentation for facial features.",
+    blurb="Face Parsing",
+    help="https://github.com/zllrunning/face-parsing.PyTorch",
     author="Kritik Soman",
     copyright="",
     date="2020",
     label="Face Parse (BiSeNet) ...",
-    imagetypes="RGB*"
+    imagetypes="RGB*",
+    params = [
+        (gfu.PF_BOOL, "force_cpu", "Force CPU", False),
+    ],
 )
-main()

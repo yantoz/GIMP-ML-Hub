@@ -3,15 +3,15 @@ import sys
 from os.path import dirname, realpath
 
 sys.path.append(realpath(dirname(__file__)))
-from gimpfu import main, pdb
+from gimpfu import pdb
 import gimpfu as gfu
 from _plugin_base import GimpPluginBase
 
 
 class Colorize(GimpPluginBase):
-    def run(self):
+    def run(self, force_cpu):
         self.model_file = 'NeuralColorization.py'
-        result = self.predict(self.drawable)
+        result = self.predict(self.drawable, force_cpu=force_cpu)
         if self.gimp_img.base_type != gfu.RGB:
             pdb.gimp_image_convert_rgb(self.gimp_img)
         if result:
@@ -21,12 +21,14 @@ class Colorize(GimpPluginBase):
 plugin = Colorize()
 plugin.register(
     proc_name="colorize",
-    blurb="colorize",
-    help="Colorize grayscale images",
+    blurb="Neural-Colorization\nGAN for Image Colorization",
+    help="https://github.com/zeruniverse/neural-colorization",
     author="Kritik Soman",
     copyright="",
     date="2020",
     label="Colorize (NeuralColorization) ...",
-    imagetypes="RGB*, GRAY*"
+    imagetypes="RGB*, GRAY*",
+    params=[
+        (gfu.PF_BOOL, "force_cpu", "Force CPU", False),
+    ],
 )
-main()
