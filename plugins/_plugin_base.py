@@ -52,7 +52,7 @@ class GimpPluginBase(object):
         return imgarray_to_image(result, name)
 
     def register(self, proc_name, blurb, help, author, copyright, date, label,
-                 imagetypes, params=None, results=None, menu="<Image>/Layer/GIML-ML",
+                 imagetypes, params=None, results=None, menu="<Image>/Layer/GIMP-ML-Hub",
                  domain=None, on_query=None, on_run=None):
         self.name = proc_name
         gfu.register(
@@ -73,9 +73,6 @@ class GimpPluginBase(object):
             domain=domain, on_query=on_query, on_run=on_run
         )
         gimp.main(None, None, gfu._query, self._run)
-
-    def _interrupt(self, dialog, response):
-        self.kill()
 
     def run_outer(self, gimp_img, drawable, *extra_args):
         self.gimp_img = gimp_img
@@ -110,6 +107,9 @@ class GimpPluginBase(object):
     def kill(self):
         if self._model_proxy:
             self._model_proxy.kill()
+
+    def _interrupt(self):
+        self.kill()
 
     def _interact(self, proc_name, start_params):
         (blurb, help, author, copyright, date,
@@ -458,6 +458,7 @@ class GimpPluginBase(object):
 
         dialog.set_alternative_button_order((gtk.RESPONSE_OK, gtk.RESPONSE_CANCEL))
 
+        dialog.set_title("GIMP-ML-Hub")
         dialog.set_transient()
 
         vbox = gtk.VBox(False, 12)
@@ -506,9 +507,9 @@ class GimpPluginBase(object):
                         raise
             elif id == gtk.RESPONSE_CANCEL:
                 log.debug("Cancel request received")
-                self.kill()
+                self._interrupt()
             elif id == gtk.RESPONSE_HELP:
-                print("Help requested")
+                log.debug("Help requested")
                 gtk.show_uri(None, help, gtk.gdk.CURRENT_TIME)
                 return
 
