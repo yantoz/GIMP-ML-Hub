@@ -19,21 +19,26 @@ class LamaInpaint(ModelBase):
         assert d >= 3, "Input image must be RGB"
 
         if d > 3:
-            alpha = input_image[:,:,3]
+            alpha = input_image[:,:,3:4]
             input_image = input_image[:,:,:3]
         else:
             alpha = None
 
-        hm, wm, dm = mask.shape
-        assert (hm == h) and (wm == w), "Mask must have same size with image"
-        assert dm == 1, "Mask must be a greyscale channel"
-        
-        mask = np.squeeze(mask, axis=2)
+        if mask is None:
+            assert d == 4, "Input image does not have alpha channel and no mask provided"
+            mask = alpha
+            alpha = None
+        else:
+            hm, wm, dm = mask.shape
+            assert (hm == h) and (wm == w), "Mask must have same size with image"
+            assert dm == 1, "Mask must be a greyscale channel"
 
-        output = self.model(input_image, mask)
+        output = self.model(input_image, np.squeeze(mask, axis=2))
 
-        if not alpha is None:
-            output = np.concatenate((output, np.expand_dims(alpha, 2)), 2)
+        if alpha is None:
+            output = np.concatenate((output, mask*0+255), 2)
+        else:
+            output = np.concatenate((output, alpha), 2)
 
         return output
 
