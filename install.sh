@@ -63,7 +63,7 @@ Linux)
     fi
     if ! command -v python2 &>/dev/null; then
       echo "python2 missing, installing..."
-      sudo pacman -S python2 --noconfirm
+      yay -S python2 --noconfirm
     fi
     if [ ! -d "/usr/lib/gimp/2.0/python" ]; then
       echo "gimp-python was not included with GIMP, installing..."
